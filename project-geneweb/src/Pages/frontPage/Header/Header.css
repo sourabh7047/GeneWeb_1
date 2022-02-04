@@ -1,0 +1,26 @@
+.navs {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+
+nav {
+  background-color: transparent;
+  padding: 16px 35px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.navs.active {
+  background: #00a4bd;
+  /* transition: background-color ease-out 60ms; */
+  transition-duration: 1.5s;
+  animation: stretch 1.5s ease-out 0s alternate infinite none running;
+}
+
+nav h1 {
+  color: #fff;
+  font-family: "McLaren", cursive;
+  font-weight: 200;
+}

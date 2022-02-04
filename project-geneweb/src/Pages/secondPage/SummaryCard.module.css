@@ -1,0 +1,40 @@
+li div p {
+  flex: 1;
+  padding: 2px 5px;
+  margin: 0;
+  font-size: small;
+  
+  min-width: fit-content;
+  
+}
+
+.content{
+  align-items: center;
+}
+
+li h4{
+    font-size: medium;
+    padding: 0px 0px 8px ;
+}    
+
+
+.flex {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  flex-basis: 20%;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hrStyle {
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,9 @@
+.card {
+  width: 100%;
+  height: fit-content;
+  margin: 10px 0;
+  background-color: white;
+  padding:  0px 0.5rem 0rem;
+  display: inline-block;
+  text-align: left;
+}

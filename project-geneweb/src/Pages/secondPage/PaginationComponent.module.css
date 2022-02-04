@@ -1,0 +1,14 @@
+.pages{
+    list-style: none;
+    display: flex;
+}
+
+.page{
+    padding: 5px;
+    border:  1px solid black;
+    cursor: pointer;
+}
+
+.root div{
+    align-content: center;
+}

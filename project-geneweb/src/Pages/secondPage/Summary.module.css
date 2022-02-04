@@ -1,0 +1,9 @@
+.innerlayout {
+  flex: 1;
+}
+
+.loading {
+  position: relative;
+  top: 50%;
+  align-content: center;
+}

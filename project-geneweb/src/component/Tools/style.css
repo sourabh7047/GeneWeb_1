@@ -1,0 +1,8 @@
+.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.btn {
+    min-width: 50%;
+}
