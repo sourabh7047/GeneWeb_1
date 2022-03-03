@@ -1,4 +1,4 @@
-export function SumData(singleQueryPage, DBdata) {
+function SumData(singleQueryPage, DBdata) {
   let summary = [];
 
   switch (DBdata) {
@@ -158,21 +158,21 @@ export function SumData(singleQueryPage, DBdata) {
       console.log(summary);
       break;
 
-      case "books":
-        singleQueryPage.result.uids.map((eleSummary) => {
-          const tempSummary = {
-            Title: `${singleQueryPage.result[eleSummary].organism}`,
-            UniqeKey: `accession id:${singleQueryPage.result[eleSummary].accessionid}`,
-            NumData: `id: ${singleQueryPage.result[eleSummary].id}`,
-            VarientOne: `book accession id : ${singleQueryPage.result[eleSummary].bookaccessionid}`,
-            VarientSecond: `chapter accession id : ${singleQueryPage.result[eleSummary].chapteraccessionid}`,
-          };
-  
-          summary.push(tempSummary);
-        });
-        // console.log(length);
-        console.log(summary);
-        break;
+    case "books":
+      singleQueryPage.result.uids.map((eleSummary) => {
+        const tempSummary = {
+          Title: `${singleQueryPage.result[eleSummary].organism}`,
+          UniqeKey: `accession id:${singleQueryPage.result[eleSummary].accessionid}`,
+          NumData: `id: ${singleQueryPage.result[eleSummary].id}`,
+          VarientOne: `book accession id : ${singleQueryPage.result[eleSummary].bookaccessionid}`,
+          VarientSecond: `chapter accession id : ${singleQueryPage.result[eleSummary].chapteraccessionid}`,
+        };
+
+        summary.push(tempSummary);
+      });
+      // console.log(length);
+      console.log(summary);
+      break;
 
     default:
       break;
@@ -180,3 +180,5 @@ export function SumData(singleQueryPage, DBdata) {
 
   return summary;
 }
+
+module.exports = SumData;

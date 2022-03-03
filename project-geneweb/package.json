@@ -18,6 +18,7 @@
     "downloadjs": "^1.4.7",
     "firebase": "^9.6.6",
     "firebase-admin": "^9.12.0",
+    "npm-build-zip": "^1.0.3",
     "http-proxy-middleware": "^2.0.1",
     "nodemon": "^2.0.15",
     "react": "^17.0.2",
@@ -31,9 +32,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "build:local": "node ./cleanup-build.js && react-scripts build && npm run zip && node ./rename-build.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "zip": "npm-build-zip"
   },
   "eslintConfig": {
     "extends": [

@@ -1,208 +1,121 @@
 // jshint esversion:6
-import express from "express";
-import https from "https";
-import { parseString } from "xml2js";
-import cors from "cors";
-import bodyParser from "body-parser";
-import { SumData } from "./SummaryData.js";
-import Espell from "./Espell.js";
-import { request } from "http";
+const express = require("express");
+const colors = require("colors");
+const cors = require("cors");
 
 const app = express();
-app.use(express.json({ extended: false }));
 
 // -----------------------------base site
 
-const base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+// const base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
 const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
 
 // -----------------------------variables;
-var webEnv = "";
-var queryKey = "";
-var retstart = 0;
-let length = 0;
 
 // ----------------------------middleware
 app.use(cors());
+app.use(express.json({ extended: false }));
 
+const PORT = process.env.SERVER_PORT;
 // ----------------------------get requests
-app.get("/internal/dbinfo", (request, response) => {
-  // database list-------
-  https.get(base + "einfo.fcgi?", (res) => {
-    let body = "";
-    res
-      .on("data", (chunk) => {
-        body += chunk;
-      })
-      .on("end", () => {
-        parseString(body, function (err, result) {
-          response.send(result.eInfoResult.DbList[0].DbName);
-        });
-      })
-      .on("error", (err) => {
-        console.log("ERROR: " + err.message);
-      });
-  });
-});
 
-// ---------------------------post requests
+// app.get(
+//   "/toolname/parameterDetail/:toolname/:parameter",
+//   (request, response) => {
+//     let toolname = request.params.toolname;
+//     let parameter = request.params.parameter;
 
-app.post("/internal/dbinfoData", (request, response) => {
-  console.log("initial query received");
-  var DBdata = request.body.DBdata;
-  var Queryterm = request.body.QueryTerm;
-  var newQuery = request.body.QueryTerm;
+//     https.get(`${EBIBase}/${toolname}/parameterdetails/${parameter}`, (res) => {
+//       let body = "";
+//       res
+//         .on("data", (chunk) => {
+//           body += chunk;
+//         })
+//         .on("end", () => {
+//           parseString(body, function (err, result) {
+//             // console.log(result.parameter.values[0].value);
+//             response.send(result.parameter.values[0].value);
+//           });
+//         });
+//     });
+//   }
+// );
 
-  https.get(base + "espell.fcgi?db=" + DBdata + "&term=" + Queryterm, (cam) => {
-    let body = "";
-    cam
-      .on("data", (chunk) => {
-        body += chunk;
-      })
-      .on("end", () => {
-        Queryterm = Espell(body, Queryterm);
-        newQuery = Queryterm.replace(/ /g, "+");
-      });
-  });
+// app.post(`/toolname/:toolname/run`, async (request, response) => {
+//   var toolName = request.params.toolname;
 
-  https.get(
-    base +
-      "esearch.fcgi?db=" +
-      DBdata +
-      "&term=" +
-      newQuery +
-      "&usehistory=y" +
-      "&RetStart=" +
-      retstart +
-      "&retmode=json&idtype=acc",
-    (res) => {
-      let body = "";
-      console.log(res.statusCode + "/");
-      res
-        .on("data", (chunk) => {
-          body += chunk;
-        })
-        .on("end", () => {
-          let initialresult = JSON.parse(body);
-          length = initialresult.esearchresult.count;
-          webEnv = initialresult.esearchresult.webenv;
-          queryKey = initialresult.esearchresult.querykey;
+//   var SequenceData = new URLSearchParams(request.body).toString();
 
-          let dataConstruct = {
-            length: length,
-            webEnv: webEnv,
-            queryKey: queryKey,
-            dbdata: DBdata,
-            page: 1,
-          };
+//   var JobId = "";
 
-          console.log(dataConstruct);
+//   while (JobId === "" || JobId.endsWith("-p1m")) {
+//     const res = await fetch(
+//       "https://www.ebi.ac.uk/Tools/services/rest/emboss_backtranseq/run",
+//       {
+//         method: "post",
+//         body: SequenceData,
+//         headers: {
+//           "Content-Type": "application/x-www-form-urlencoded",
+//           Accept: "text/plain",
+//           "User-Agent": "test",
+//         },
+//       }
+//     );
 
-          response.send(dataConstruct);
-        })
-        .on("error", (err) => {
-          console.log("error:" + err.message);
-        });
-    }
-  );
-});
+//     if (res.status >= 200 && res.status <= 299) {
+//       const textRes = await res.text();
+//       JobId = textRes;
+//       // console.log(JobId);
+//     } else {
+//       response.json({
+//         Response: "Sorry, Unable To Run Your Request Now, Please Try Again",
+//       });
+//       break;
+//     }
+//   }
 
-app.get(
-  "/internal/:dbdata/webenv/:webenv/query/:query/page/:page",
-  (request, response) => {
-    console.log(request.statusCode + "//");
-    let DBdata = request.params.dbdata;
-    let webEnv = request.params.webenv;
-    let queryKey = request.params.query;
-    let page = request.params.page;
-    let accStart = (page - 1) * 20;
+//   if (JobId.endsWith("-p2m")) {
+//     const StatusResult = JobStatus(JobId)
+//       .then((Status) => {
+//         if (Status === "FINISHED") {
+//           // console.log("got result");
+//           const Sequence = OutSeq(JobId, "out")
+//             .then((res) => {
+//               res.send({ Response: res });
+//               // console.log("got the sequence");
+//             })
+//             .catch((err) => {
+//               res.status(400).json({
+//                 Response:
+//                   "Sequence Could Not Able To Fetch, Please Try Again Later",
+//               });
+//             });
+//         } else if (Status === "NOT FOUND") {
+//           res
+//             .status(400)
+//             .json({ Response: "Could Not Able To Find The Sequence" });
+//         } else if (Status === "RUNNING") {
+//           res.status(400).json({
+//             Response: "Sorry, Server Is Taking To Much Time, Try Again",
+//           });
+//         }
+//       })
+//       .catch((err) => {
+//         res.status(400).json({ Response: err });
+//       });
+//   } else {
+//     response.json({
+//       Response: "Sorry, Unable To Run Your Request Now, Please Try Later",
+//     });
+//   }
+// });
 
-    https.get(
-      base +
-        "/esummary.fcgi?db=" +
-        DBdata +
-        "&query_key=" +
-        queryKey +
-        "&WebEnv=" +
-        webEnv +
-        "&retstart=" +
-        accStart +
-        "&retmax=20&retmode=json",
-      (res) => {
-        let body = "";
-        res
-          .on("data", (chunk) => {
-            body += chunk;
-          })
-          .on("end", () => {
-            let singleQueryPage = JSON.parse(body);
-            let summary = SumData(singleQueryPage, DBdata);
-
-            console.log(summary);
-
-            let comSummary = {
-              summary: summary,
-            };
-
-            response.send(comSummary);
-          })
-          .on("error", function (err) {
-            console.log(err);
-          });
-      }
-    );
-  }
-);
-
-app.post("/internal/:dbdata/download/:id", (request, response) => {
-  console.log(request.statusCode + "?");
-  let dbdata = request.params.dbdata;
-  let id = request.params.id;
-  let retmode = request.body.retmode;
-  let rettype = request.body.rettype;
-
-  https.get(
-    base +
-      `efetch.fcgi?db=${dbdata}&id=${id}&rettype=${rettype}&retmode=${retmode}`,
-    (res) => {
-      let body = "";
-      res
-        .on("data", (chunk) => {
-          body += chunk;
-        })
-        .on("end", () => {
-          console.log(body);
-          response.send(body);
-        });
-    }
-  );
-});
-
-app.get(
-  "/toolname/parameterDetail/:toolname/:parameter",
-  (request, response) => {
-    let toolname = request.params.toolname;
-    let parameter = request.params.parameter;
-
-    https.get(`${EBIBase}/${toolname}/parameterdetails/${parameter}`, (res) => {
-      let body = "";
-      res
-        .on("data", (chunk) => {
-          body += chunk;
-        })
-        .on("end", () => {
-          parseString(body, function (err, result) {
-            console.log(result.parameter.values[0].value);
-            response.send(result.parameter.values[0].value);
-          });
-        });
-    });
-  }
-);
+app.use("/internal", require("./routes/Ncbi"));
+app.use("/toolname", require("./routes/Ebi"));
 
 // ---------------------------listen requests
 app.listen(5000, function () {
-  console.log("server has started on port 5000");
+  console.log(`server has started on port ${PORT}`.yellow.bold);
 });
 
 // whenever we get the localhost:300 meaning that something wrong you have done in the frontend request send thus routing is taking place to for affordable front end route
