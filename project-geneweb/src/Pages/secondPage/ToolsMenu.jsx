@@ -6,15 +6,18 @@ import * as ROUTES from "../../routes";
 import WebContext from "./context";
 import { withRouter } from "react-router-dom";
 
-class Tools extends Component {
+const ToolList = ["Backtranseq", "sixpack"];
+
+class ToolsMenu extends Component {
   toolRedirect(e, webFile) {
+    // console.log(e.currentTarget.innerText);
     this.props.history.push({
-      pathname:  `/webenv/${webFile.webenv}/tools/${e.currentTarget.innerText}`,
+      pathname: `/webenv/${webFile.webenv}/tools/${e.currentTarget.innerText}`,
       state: {
         webFile: webFile,
-        toolName: e.currentTarget.innerText
-      }
-    })
+        toolName: e.currentTarget.innerText,
+      },
+    });
   }
   render() {
     return (
@@ -28,10 +31,15 @@ class Tools extends Component {
             onClose={() => this.props.handleClose(null)}
           >
             <MenuItem>
-              {/* <Link to={{ pathname: ROUTES.TOOLS, state: { Webdata: data } }}>
-                Backtranseq
-              </Link> */}
-              <p onClick={(e) => this.toolRedirect(e, webFile)}>Backtranseq</p>
+              <ul>
+                {ToolList.map((_tool, idx) => {
+                  return (
+                    <li onClick={(e) => this.toolRedirect(e, webFile)}>
+                      {_tool}
+                    </li>
+                  );
+                })}
+              </ul>
             </MenuItem>
           </Menu>
         )}
@@ -40,4 +48,4 @@ class Tools extends Component {
   }
 }
 // onClick={this.props.handleClose}
-export default withRouter(Tools);
+export default withRouter(ToolsMenu);

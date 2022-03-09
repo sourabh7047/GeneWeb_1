@@ -1,6 +1,7 @@
+const res = require("express/lib/response");
 const fetch = require("node-fetch");
 
-function JobStatus(JobId) {
+function JobStatus(JobId, toolName) {
   var ResultAwaitOptions = {
     Method: "GET",
     headers: {
@@ -13,8 +14,9 @@ function JobStatus(JobId) {
   var counter = 0;
   return new Promise((resolve, reject) => {
     const Progress = setInterval((counter) => {
+      // console.log("t");
       fetch(
-        `https://www.ebi.ac.uk/Tools/services/rest/emboss_backtranseq/status/${JobId}`,
+        `https://www.ebi.ac.uk/Tools/services/rest/${toolName}/status/${JobId}`,
         ResultAwaitOptions
       )
         .then((res) => res.text())
@@ -33,13 +35,16 @@ function JobStatus(JobId) {
               clearInterval(Progress);
               resolve("RUNNING"); //resolve
             }
+          } else {
+            console.log(body);
+            clearInterval(Progress);
+            resolve(body);
           }
         })
         .catch((err) => {
-          //   console.log("catch errro");
+          //   console.log("catch error");
           clearInterval(Progress);
           reject("Internal Server Error, Try after some time!");
-          
         });
     }, 5000);
   });
