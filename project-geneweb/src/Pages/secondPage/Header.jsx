@@ -3,8 +3,8 @@ import classes from "./Header.module.css";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import Tools from "./Tools";
-import {useHistory} from 'react-router-dom';
+import ToolsMenu from "./ToolsMenu";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,8 +15,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-
 export default function Header(props) {
   const [anchor, setanchor] = useState(null);
   const mStyle = useStyles();
@@ -49,12 +47,12 @@ export default function Header(props) {
                 <Button
                   className={mStyle.root}
                   aria-haspopup="true"
-                  aria-controls={Tools}
+                  aria-controls={ToolsMenu}
                   onClick={handleClick}
                 >
                   Tools
                 </Button>
-                <Tools anchor={anchor} handleClose={handleClose} />
+                <ToolsMenu anchor={anchor} handleClose={handleClose} />
               </li>
 
               <li>

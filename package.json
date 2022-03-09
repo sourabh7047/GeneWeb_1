@@ -1,8 +1,7 @@
 {
   "name": "genomeweb-backend",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "\"backend of genome project\"",
- 
   "main": "index.js",
   "scripts": {
     "client-install": "npm install --prefix client",
@@ -24,7 +23,6 @@
     "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "node-fetch": "^2.6.7",
-    "xhr2": "^0.2.1",
     "xml2js": "^0.4.23"
   }
 }

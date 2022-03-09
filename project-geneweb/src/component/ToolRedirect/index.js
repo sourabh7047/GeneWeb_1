@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import Backtranseq from '../Tools/Backtranseq'
+import Backtranseq from "../Tools/Backtranseq";
+import Sixpack from "../Tools/Sixpack";
 
 class ToolRedirect extends Component {
   constructor(props) {
@@ -11,23 +12,20 @@ class ToolRedirect extends Component {
     };
   }
 
-  renderSwitch(location){
-      console.log(location.state)
-      // eslint-disable-next-line default-case
-      switch(location.state.toolName){
-          case 'Backtranseq': 
-           return <Backtranseq locationFile={location.state} />
-      }
+  renderSwitch(location) {
+    console.log(location.state);
+    // eslint-disable-next-line default-case
+    switch (location.state.toolName) {
+      case "Backtranseq":
+        return <Backtranseq locationFile={location.state} />;
+      case "sixpack":
+        return <Sixpack locationFile={location.state} />;
+    }
   }
-
 
   render() {
     const { location } = this.state;
-    return (
-        <div>
-            {this.renderSwitch(location)}
-        </div>
-    )
+    return <div>{this.renderSwitch(location)}</div>;
   }
 }
 
