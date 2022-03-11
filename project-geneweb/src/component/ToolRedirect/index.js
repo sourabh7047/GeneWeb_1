@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Backtranseq from "../Tools/Backtranseq";
 import Sixpack from "../Tools/Sixpack";
+import Transeq from "../Tools/Transeq";
 
 class ToolRedirect extends Component {
   constructor(props) {
@@ -20,6 +21,8 @@ class ToolRedirect extends Component {
         return <Backtranseq locationFile={location.state} />;
       case "sixpack":
         return <Sixpack locationFile={location.state} />;
+      case "transeq":
+        return <Transeq locationFile={location.state} />;
     }
   }
 

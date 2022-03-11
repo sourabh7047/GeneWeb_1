@@ -4,8 +4,9 @@ import { AuthUserContext } from "../Session";
 
 // https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
-  firstorf: ["true", "false"],
-  lastorf: ["true", "false"],
+  frame: ["1", "2", "3", "F", "-1", "-2", "-3", "R", "6"],
+  regions: ["START-END"],
+  trim: ["true", "false"],
   reverse: ["true", "false"],
 };
 
@@ -19,7 +20,6 @@ class Sixpack extends Component {
       codontable: [],
       codon: "",
       sequence: "",
-      orfminsize: 1,
       ...INITIAL_STATE,
     };
   }
@@ -63,11 +63,11 @@ class Sixpack extends Component {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
+        frame: this.state.frame,
         codon: this.state.codon,
-        firstorf: this.state.firstorf,
-        lastorf: this.state.lastorf,
+        regions: this.state.regions,
+        trim: this.state.trim,
         reverse: this.state.reverse,
-        orfminsize: this.state.orfminsize,
         sequence: this.state.sequence,
       }),
       headers: {
