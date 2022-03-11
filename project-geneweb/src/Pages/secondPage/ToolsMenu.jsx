@@ -6,7 +6,7 @@ import * as ROUTES from "../../routes";
 import WebContext from "./context";
 import { withRouter } from "react-router-dom";
 
-const ToolList = ["Backtranseq", "sixpack"];
+const ToolList = ["Backtranseq", "sixpack", "transeq"];
 
 class ToolsMenu extends Component {
   toolRedirect(e, webFile) {
