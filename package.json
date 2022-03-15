@@ -1,6 +1,6 @@
 {
   "name": "genomeweb-backend",
-  "version": "5.2.0",
+  "version": "5.7.1",
   "description": "\"backend of genome project\"",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "node-fetch": "^2.6.7",
+    "xhr2": "^0.2.1",
     "xml2js": "^0.4.23"
   }
 }
