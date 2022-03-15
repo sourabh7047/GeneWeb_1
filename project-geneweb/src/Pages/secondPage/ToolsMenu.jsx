@@ -15,7 +15,8 @@ const ToolList = [
   "saps",
   "newcpgreport",
   "clustalo",
-  "kalign"
+  "kalign",
+  "muscle"
 ];
 
 class ToolsMenu extends Component {
