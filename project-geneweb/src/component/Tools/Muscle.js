@@ -4,11 +4,8 @@ import { AuthUserContext } from "../Session";
 
 var INITIAL_STATE = {
   stype: ["protein", "dna"],
-  format: ["fasta", "clu", "macsim"],
-  gapopen: [110], //100 to 950
-  gapext: [40], //10 to 100
-  termgap: [2],
-  bonus: [0],
+  format: ["fasta", "clw", "clwstrict", "html", "msf", "phyi", "phys"],
+  tree: ["none", "tree1", "tree2"],
 };
 
 class Kalign extends Component {
@@ -67,12 +64,9 @@ class Kalign extends Component {
       body: JSON.stringify({
         email: this.state.email,
         // codon: this.state.codon,
-        format: this.state.format,
         stype: this.state.stype,
-        gapopen: this.state.gapopen,
-        gapext: this.state.gapext,
-        termgap: this.state.termgap,
-        bonus: this.state.bonus,
+        format: this.state.format,
+        tree: this.state.tree,
         sequence: this.state.sequence,
       }),
       headers: {

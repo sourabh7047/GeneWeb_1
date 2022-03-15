@@ -9,6 +9,7 @@ import SAPS from "../Tools/SAPS";
 import NewCpgReport from "../Tools/NewCpgReport";
 import ClustalOmega from "../Tools/Clustal_Omega";
 import Kalign from "../Tools/Kalign";
+import Muscle from "../Tools/Muscle";
 
 class ToolRedirect extends Component {
   constructor(props) {
@@ -42,6 +43,8 @@ class ToolRedirect extends Component {
         return <ClustalOmega locationFile={location.state} />;
       case "kalign":
         return <Kalign locationFile={location.state} />;
+      case "muscle":
+        return <Muscle locationFile={location.state} />;
     }
   }
 

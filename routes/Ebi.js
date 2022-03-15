@@ -71,7 +71,8 @@ router.post(`/:toolname/run`, async (request, response) => {
           if (Status === "FINISHED") {
             // console.log("got result");
             // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  clutal omega
-            // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")
+            // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
+            // const Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
             const Sequence = OutSeq(JobId, toolName, "out")
               .then((res) => {
                 return response.json({ Response: res });
