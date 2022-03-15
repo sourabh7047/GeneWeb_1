@@ -33,7 +33,7 @@ router.post(`/:toolname/run`, async (request, response) => {
     console.log(toolName);
 
     var SequenceData = new URLSearchParams(request.body).toString();
-    // console.log(SequenceData);
+    console.log(SequenceData);
 
     var JobId = "";
 
@@ -57,6 +57,7 @@ router.post(`/:toolname/run`, async (request, response) => {
         console.log(JobId);
       } else {
         console.log(res.status);
+        console.log();
         return response.json({
           Response: "Sorry, Unable To Run Your Request Now, Please Try Again",
         });
@@ -69,7 +70,8 @@ router.post(`/:toolname/run`, async (request, response) => {
         .then((Status) => {
           if (Status === "FINISHED") {
             // console.log("got result");
-            // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")
+            // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  clutal omega
+            // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")
             const Sequence = OutSeq(JobId, toolName, "out")
               .then((res) => {
                 return response.json({ Response: res });
