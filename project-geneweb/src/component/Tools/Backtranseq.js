@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./style.css";
 import { AuthUserContext } from "../Session";
+import NewlineText from "../NewlineText";
 
 class Backtranseq extends Component {
   constructor(props) {
@@ -9,8 +10,13 @@ class Backtranseq extends Component {
       console.log(props);
     }
     this.state = {
+      email: JSON.parse(localStorage.getItem("authUser")).email,
+      Rtype: "out",
+      
       toolname: this.props.locationFile.toolName.toLowerCase(),
       table: [],
+      isToolResponse: false,
+      toolResponse: [],
       ...INITIAL_STATE,
     };
   }
@@ -44,8 +50,15 @@ class Backtranseq extends Component {
     }
   };
 
+  handleToolResponse = (data) => {
+    this.setState({
+      toolResponse: data,
+      isToolResponse: true,
+    });
+  };
+
   onSubmit = (event) => {
-    fetch(`/toolname/emboss_${this.state.toolname}/run`, {
+    fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
@@ -59,10 +72,15 @@ class Backtranseq extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            console.log(result);
+            // console.log(typeof result.Response);
+            NewlineText(result.Response).then((array) => {
+              this.handleToolResponse(array);
+            });
           });
         } else {
           // error display
+          console.log(res.status);
+          console.log(res.body);
         }
       })
       .catch((error) => {
@@ -72,7 +90,8 @@ class Backtranseq extends Component {
   };
 
   render() {
-    const { table, sequence, codontable } = this.state;
+    const { table, sequence, codontable, isToolResponse, toolResponse } =
+      this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
@@ -107,6 +126,18 @@ class Backtranseq extends Component {
             Submit
           </button>
         </form>
+        {isToolResponse ? (
+          <div>
+            {toolResponse.map((line) => {
+              console.log(toolResponse);
+              return <h6>{line}</h6>;
+            })}
+          </div>
+        ) : (
+          <div>
+            <h4>nothing to show</h4>
+          </div>
+        )}
       </div>
     );
   }
@@ -117,5 +148,4 @@ export default Backtranseq;
 const INITIAL_STATE = {
   sequence: "",
   codontable: "",
-  email: JSON.parse(localStorage.getItem("authUser")).email,
 };

@@ -4,8 +4,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FileFormat from "./FileFormat";
 
 const Formatmenus = (props) => {
-   
-
   return (
     <div>
       <Menu
@@ -15,10 +13,11 @@ const Formatmenus = (props) => {
         onClose={props.handleClose}
       >
         {props.Format.map((format, index) => {
+          // console.log(format);
           return (
             <MenuItem
               onClick={() => {
-                props.handleClose(props.id , format);
+                props.handleClose(props.id, format);
               }}
               key={`${format}${index}`}
             >

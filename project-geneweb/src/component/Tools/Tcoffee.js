@@ -1,59 +1,56 @@
 import React, { Component } from "react";
 import "./style.css";
 import { AuthUserContext } from "../Session";
-import NewlineText from "../NewlineText";
 
-// https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
-  frame: ["1", "2", "3", "F", "-1", "-2", "-3", "R", "6"],
-  regions: ["START-END"],
-  trim: ["true", "false"],
-  reverse: ["true", "false"],
+  format: ["clustalw", "fasta_aln", "msf", "phylip", "score_html"],
+  matrix: ["none", "blosum", "pam"],
+  order: ["aligned", "input"],
+  stype: ["protein", "dna", "rna"],
 };
 
-class Sixpack extends Component {
+class Tcoffee extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
-      Rtype: "out",
       email: JSON.parse(localStorage.getItem("authUser")).email,
-      codontable: [],
-      codon: "",
+      // codontable: [],
+      // codon: "",
       sequence: "",
-      isToolResponse: false,
-      toolResponse: [],
+      // orfminsize: 1,
       ...INITIAL_STATE,
     };
   }
 
-  componentDidMount() {
-    this.parameterDetail();
-  }
+  // componentDidMount() {
+  //   this.parameterDetail();
+  // }
 
-  parameterDetail = () => {
-    // eslint-disable-next-line no-unused-expressions
-    fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
-      .then(function (Response) {
-        return Response.json();
-      })
-      .then((Array) => {
-        this.setState({ codontable: Array });
-      });
-  };
+  // parameterDetail = () => {
+  //   // eslint-disable-next-line no-unused-expressions
+  //   console.log(this.state.toolname);
+  //   fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
+  //     .then(function (Response) {
+  //       return Response.json();
+  //     })
+  //     .then((Array) => {
+  //       this.setState({ codontable: Array });
+  //     });
+  // };
 
   _onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  _onClickCodon = (e) => {
-    for (let obj of this.state.codontable) {
-      if (obj.label[0] === e.currentTarget.innerText) {
-        this.setState({ codon: obj.value[0] });
-      }
-    }
-  };
+  // _onClickCodon = (e) => {
+  //   for (let obj of this.state.codontable) {
+  //     if (obj.label[0] === e.currentTarget.innerText) {
+  //       this.setState({ codon: obj.value[0] });
+  //     }
+  //   }
+  // };
 
   _onClick = (e) => {
     console.log(e.target.innerText);
@@ -61,24 +58,17 @@ class Sixpack extends Component {
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
-  handleToolResponse = (data) => {
-    this.setState({
-      toolResponse: data,
-      isToolResponse: true,
-    });
-  };
-
   onSubmit = (event) => {
     console.log(this.state);
-    fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
+    fetch(`/toolname/${this.state.toolname}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
-        frame: this.state.frame,
-        codon: this.state.codon,
-        regions: this.state.regions,
-        trim: this.state.trim,
-        reverse: this.state.reverse,
+        // codon: this.state.codon,
+        format: this.state.format,
+        matrix: this.state.matrix,
+        order: this.state.order,
+        stype: this.state.stype,
         sequence: this.state.sequence,
       }),
       headers: {
@@ -88,17 +78,22 @@ class Sixpack extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            // console.log(typeof result.Response);
-            NewlineText(result.Response).then((array) => {
-              this.handleToolResponse(array);
-            });
+            console.log(result.Response);
+            //convert to base64
+            // var b64Response = btoa(
+            //   unescape(encodeURIComponent(result.Response))
+            // );
+            // // console.log(b64Response);
+
+            //create an image
+            // var outputImg = document.createElement("img");
+            // outputImg.src = "data:image/png;base64," + b64Response;
+            // console.log(outputImg.src);
+            // document.body.appendChild(outputImg);
           });
         } else {
           console.log(res.status);
           console.log(res.body);
-          //   res.json().then((result) => {
-          //     console.log(result);
-          //   });
         }
       })
       .catch((error) => {
@@ -109,7 +104,7 @@ class Sixpack extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const { sequence, codontable } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
@@ -123,7 +118,7 @@ class Sixpack extends Component {
             rows="6"
             cols="100"
           />
-          <div class="dropdown">
+          {/* <div class="dropdown">
             <button
               class="btn btn-large btn-secondary dropdown-toggle"
               type="button"
@@ -136,10 +131,10 @@ class Sixpack extends Component {
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {codontable.map((value, idx) => {
-                return <p onClick={this._onClickCodon}>{value.label[0]}</p>;
+                return <p>{value.label[0]}</p>;
               })}
             </div>
-          </div>
+          </div> */}
           {Object.keys(INITIAL_STATE).map((key, index) => {
             return (
               <div class="dropdown">
@@ -173,21 +168,9 @@ class Sixpack extends Component {
             Submit
           </button>
         </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              console.log(toolResponse);
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
       </div>
     );
   }
 }
 
-export default Sixpack;
+export default Tcoffee;

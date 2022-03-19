@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./style.css";
 import { AuthUserContext } from "../Session";
+import NewlineText from "../NewlineText";
 
 var INITIAL_STATE = {
   stype: ["protein", "dna"],
@@ -18,9 +19,12 @@ class Kalign extends Component {
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
       email: JSON.parse(localStorage.getItem("authUser")).email,
+      Rtype: "aln-clustalw",
       // codontable: [],
       // codon: "",
       sequence: "",
+      isToolResponse: false,
+      toolResponse: [],
       // orfminsize: 1,
       ...INITIAL_STATE,
     };
@@ -60,9 +64,16 @@ class Kalign extends Component {
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
+  handleToolResponse = (data) => {
+    this.setState({
+      toolResponse: data,
+      isToolResponse: true,
+    });
+  };
+
   onSubmit = (event) => {
     console.log(this.state);
-    fetch(`/toolname/${this.state.toolname}/run`, {
+    fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
@@ -82,19 +93,23 @@ class Kalign extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            console.log(result.Response);
-            //convert to base64
-            // var b64Response = btoa(
-            //   unescape(encodeURIComponent(result.Response))
-            // );
-            // // console.log(b64Response);
-
-            //create an image
-            // var outputImg = document.createElement("img");
-            // outputImg.src = "data:image/png;base64," + b64Response;
-            // console.log(outputImg.src);
-            // document.body.appendChild(outputImg);
+            // console.log(typeof result.Response);
+            NewlineText(result.Response).then((array) => {
+              this.handleToolResponse(array);
+            });
           });
+
+          //convert to base64
+          // var b64Response = btoa(
+          //   unescape(encodeURIComponent(result.Response))
+          // );
+          // // console.log(b64Response);
+
+          //create an image
+          // var outputImg = document.createElement("img");
+          // outputImg.src = "data:image/png;base64," + b64Response;
+          // console.log(outputImg.src);
+          // document.body.appendChild(outputImg);
         } else {
           console.log(res.status);
           console.log(res.body);
@@ -108,7 +123,7 @@ class Kalign extends Component {
   };
 
   render() {
-    const { sequence, codontable } = this.state;
+    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
@@ -172,6 +187,18 @@ class Kalign extends Component {
             Submit
           </button>
         </form>
+        {isToolResponse ? (
+          <div>
+            {toolResponse.map((line) => {
+              console.log(toolResponse);
+              return <h6>{line}</h6>;
+            })}
+          </div>
+        ) : (
+          <div>
+            <h4>nothing to show</h4>
+          </div>
+        )}
       </div>
     );
   }

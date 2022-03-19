@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./style.css";
 import { AuthUserContext } from "../Session";
+import NewlineText from "../NewlineText";
 
 // https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
@@ -15,11 +16,14 @@ class Sixpack extends Component {
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
+      Rtype: "out",
       email: JSON.parse(localStorage.getItem("authUser")).email,
       codontable: [],
       codon: "",
       sequence: "",
       orfminsize: 1,
+      isToolResponse: false,
+      toolResponse: [],
       ...INITIAL_STATE,
     };
   }
@@ -57,9 +61,16 @@ class Sixpack extends Component {
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
+  handleToolResponse = (data) => {
+    this.setState({
+      toolResponse: data,
+      isToolResponse: true,
+    });
+  };
+
   onSubmit = (event) => {
     console.log(this.state);
-    fetch(`/toolname/emboss_${this.state.toolname}/run`, {
+    fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
@@ -77,7 +88,10 @@ class Sixpack extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            console.log(result);
+            // console.log(typeof result.Response);
+            NewlineText(result.Response).then((array) => {
+              this.handleToolResponse(array);
+            });
           });
         } else {
           console.log(res.status);
@@ -95,7 +109,7 @@ class Sixpack extends Component {
   };
 
   render() {
-    const { sequence, codontable } = this.state;
+    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
@@ -159,6 +173,18 @@ class Sixpack extends Component {
             Submit
           </button>
         </form>
+        {isToolResponse ? (
+          <div>
+            {toolResponse.map((line) => {
+              console.log(toolResponse);
+              return <h6>{line}</h6>;
+            })}
+          </div>
+        ) : (
+          <div>
+            <h4>nothing to show</h4>
+          </div>
+        )}
       </div>
     );
   }

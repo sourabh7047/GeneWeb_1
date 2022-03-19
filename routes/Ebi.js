@@ -1,4 +1,5 @@
 var express = require("express");
+const req = require("express/lib/request");
 var router = express.Router();
 const https = require("https");
 const parseString = require("xml2js").parseString;
@@ -27,10 +28,12 @@ router.get("/parameterDetail/:toolname/:parameter", (request, response) => {
   });
 });
 
-router.post(`/:toolname/run`, async (request, response) => {
+router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   try {
-    var toolName = request.params.toolname;
+    const toolName = request.params.toolname;
+    // const Rtype = request.params.Rtype;
     console.log(toolName);
+    // console.log(Rtype);
 
     var SequenceData = new URLSearchParams(request.body).toString();
     console.log(SequenceData);
@@ -70,10 +73,10 @@ router.post(`/:toolname/run`, async (request, response) => {
         .then((Status) => {
           if (Status === "FINISHED") {
             // console.log("got result");
-            // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  clutal omega
+            // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
             // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
             // const Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
-            const Sequence = OutSeq(JobId, toolName, "out")
+            const Sequence = OutSeq(JobId, toolName, Rtype) //out
               .then((res) => {
                 return response.json({ Response: res });
               })

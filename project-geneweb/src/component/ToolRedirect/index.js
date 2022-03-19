@@ -10,6 +10,7 @@ import NewCpgReport from "../Tools/NewCpgReport";
 import ClustalOmega from "../Tools/Clustal_Omega";
 import Kalign from "../Tools/Kalign";
 import Muscle from "../Tools/Muscle";
+import Tcoffee from "../Tools/Tcoffee";
 
 class ToolRedirect extends Component {
   constructor(props) {
@@ -45,6 +46,8 @@ class ToolRedirect extends Component {
         return <Kalign locationFile={location.state} />;
       case "muscle":
         return <Muscle locationFile={location.state} />;
+      case "tcoffee":
+        return <Tcoffee locationFile={location.state} />;
     }
   }
 

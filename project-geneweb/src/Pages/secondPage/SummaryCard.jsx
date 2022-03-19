@@ -16,12 +16,16 @@ function SummaryCard(props) {
   }
 
   async function handleClose(id, format) {
+    console.log("entered ///////////////////////////");
     setAnchorEl(null);
     if (format !== "backdropClick") {
       var retmode = "";
       var rettype = "";
       FileFormat.databaseList.forEach((database) => {
+        console.log(database+"   "+props.dataConstruct.dbdata);
+
         if (database === props.dataConstruct.dbdata) {
+          console.log(";;;;;;;;;;;;;;;;;;;;;;;")
           retmode = FileFormat.databaseData[database].Filetype[format].retmode;
           rettype = FileFormat.databaseData[database].Filetype[format].retype;
         }
@@ -32,6 +36,7 @@ function SummaryCard(props) {
         retmode: retmode,
         rettype: rettype,
       };
+
       console.log(Acc);
       await fetch(`/internal/${props.dataConstruct.dbdata}/download/${Acc}`, {
         method: "POST",
