@@ -5,10 +5,6 @@ const cors = require("cors");
 
 const app = express();
 
-// -----------------------------base site
-
-const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
-
 // ----------------------------middleware
 
 app.use(cors());

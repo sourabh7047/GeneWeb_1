@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
 import classes from "./PaginationComponent.module.css";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PaginationButtons(props) {
+  console.log(props);
   const classes = useStyles();
   const history = useHistory();
 
@@ -31,15 +33,22 @@ export default function PaginationButtons(props) {
   };
 
   return (
-    <div className={classes.root} style={{alignContent:"center"}}>
+    <Wrapper>
       <Pagination
         page={parseInt(props.dataConstruct.page)}
         count={totalPages}
         onClick={handleClick}
-        hideNextButton = {true} 
-        hidePrevButton = {true}
-        style={{display:"inline-flex", alignSelf:"center"}}
+        hideNextButton={true}
+        hidePrevButton={true}
+        style={{ display: "inline-flex", alignSelf: "center" }}
       />
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`;

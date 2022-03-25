@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ToolsMenu from "./ToolsMenu";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,8 +37,8 @@ export default function Header(props) {
 
   return (
     <div>
-      <div className={classes.nav}>
-        <div className={classes.desktop}>
+      <Nav>
+        <Desktop>
           <div className={classes.wrapperRight}>
             <ul>
               <li>
@@ -62,11 +63,27 @@ export default function Header(props) {
               </li>
             </ul>
           </div>
-        </div>
-      </div>
+        </Desktop>
+      </Nav>
     </div>
   );
 }
+
+const Nav = styled.div`
+  height: 10rem;
+  width: 100%;
+`;
+
+const Desktop = styled.div`
+  width: 100%;
+  height: 55px;
+`;
+
+const WrapperRight = styled.div`
+  display: flex;
+  height: 55px;
+  justify-content: flex-end;
+`;
 
 // ipg
 // eslint-disable-next-line no-lone-blocks

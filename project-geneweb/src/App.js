@@ -18,8 +18,9 @@ import HomePage from "./component/Home";
 import Backtranseq from "./component/Tools/Backtranseq";
 import ToolRedirect from "./component/ToolRedirect";
 import Home from "./component/Home";
+import "./App.css";
 
-export default function App() {
+const App = () => {
   return (
     <div>
       <Switch>
@@ -42,4 +43,6 @@ export default function App() {
       </Switch>
     </div>
   );
-}
+};
+
+export default App;

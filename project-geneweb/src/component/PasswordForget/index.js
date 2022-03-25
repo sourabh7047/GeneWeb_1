@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../routes';
+import styled from 'styled-components';
 
 const PasswordForgetPage = () => (
   <div>
@@ -68,7 +69,7 @@ class PasswordForgetFormBase extends Component {
 
 const PasswordForgetLink = () => (
   <p>
-    <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
+    <MLink  to={ROUTES.PASSWORD_FORGET}>Forgot Password?</MLink>
   </p>
 );
 
@@ -77,3 +78,9 @@ export default PasswordForgetPage;
 const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
 
 export { PasswordForgetForm, PasswordForgetLink };
+
+const MLink = styled(Link)`
+  color: #757575;
+  text-decoration: none;
+  
+`;
