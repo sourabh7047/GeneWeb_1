@@ -84,20 +84,21 @@ const FirstPage = () => {
       onAddNewSearch(searchData);
     }
   };
-  const changeBackground = () => {
-    console.log(window.scrollY);
-    let x = window.scrollY;
-    if (x > 80) {
-      this.setState({
-        navbar: true,
-      });
-      console.log("yes");
-    } else {
-      this.setState({
-        navbar: false,
-      });
-    }
-  };
+
+  // const changeBackground = () => {
+  //   console.log(window.scrollY);
+  //   let x = window.scrollY;
+  //   if (x > 80) {
+  //     this.setState({
+  //       navbar: true,
+  //     });
+  //     console.log("yes");
+  //   } else {
+  //     this.setState({
+  //       navbar: false,
+  //     });
+  //   }
+  // };
 
   const onAddNewSearch = (searchData) => {
     // it is a standard javascipt function nothing to do with node
@@ -128,7 +129,7 @@ const FirstPage = () => {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", changeBackground);
+    // window.addEventListener("scroll", changeBackground);;
   }, []);
 
   return (

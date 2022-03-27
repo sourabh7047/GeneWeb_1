@@ -1,4 +1,5 @@
 // jshint esversion:6
+const dotenv = require("dotenv").config();
 const express = require("express");
 const colors = require("colors");
 const cors = require("cors");
@@ -19,6 +20,6 @@ app.use("/toolname", require("./routes/Ebi"));
 
 // ---------------------------listen requests
 
-app.listen(5000, function () {
+app.listen(PORT, function () {
   console.log(`server has started on port ${PORT}`.yellow.bold);
 });

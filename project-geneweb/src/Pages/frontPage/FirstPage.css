@@ -1,13 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-html {
-  font-family: "Montserrat", sans-serif;
-  overflow-x: hidden;
-}
-
 .db-search {
   display: flex;
   list-style: none;
@@ -30,5 +20,4 @@ html {
   min-width: 100%;
   min-height: 800px;
   height: auto;
- 
 }

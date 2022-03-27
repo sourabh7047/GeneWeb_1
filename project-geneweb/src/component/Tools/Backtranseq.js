@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "./style.css";
-import { AuthUserContext } from "../Session";
 import NewlineText from "../NewlineText";
+import styled from "styled-components";
+import "./style.css";
 
 class Backtranseq extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class Backtranseq extends Component {
     this.state = {
       email: JSON.parse(localStorage.getItem("authUser")).email,
       Rtype: "out",
-      
+
       toolname: this.props.locationFile.toolName.toLowerCase(),
       table: [],
       isToolResponse: false,
@@ -95,50 +95,54 @@ class Backtranseq extends Component {
 
     const isInvalid = sequence === "" || codontable === "";
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <p>Protein sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="100"
-          />
-          <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
+      <Wrapper>
+        <FormCard>
+          <form onSubmit={this.onSubmit}>
+            <p>Protein sequence in any supported format:</p>
+            <textarea
+              onChange={this._onChange}
+              name="sequence"
+              value={this.state.value}
+              rows="6"
+              cols="100"
+            />
+            <div class="dropdown">
+              <button
+                class="btn btn-large btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Dropdown button
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {table.map((obj) => {
+                  return <p onClick={this._onClick}>{obj.label[0]}</p>;
+                })}
+              </div>
+            </div>
+            <button disabled={isInvalid} type="submit">
+              Submit
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {table.map((obj) => {
-                return <p onClick={this._onClick}>{obj.label[0]}</p>;
+          </form>
+        </FormCard>
+        <Outform>
+          {isToolResponse ? (
+            <div>
+              {toolResponse.map((line) => {
+                console.log(toolResponse);
+                return <h6>{line}</h6>;
               })}
             </div>
-          </div>
-          <button disabled={isInvalid} type="submit">
-            Submit
-          </button>
-        </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              console.log(toolResponse);
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div>
+              <h4>nothing to show</h4>
+            </div>
+          )}
+        </Outform>
+      </Wrapper>
     );
   }
 }
@@ -149,3 +153,25 @@ const INITIAL_STATE = {
   sequence: "",
   codontable: "",
 };
+
+const FormCard = styled.div`
+  height: 700px;
+  width: 700px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Outform = styled.div`
+  height: 700px;
+  width: 700px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+`;

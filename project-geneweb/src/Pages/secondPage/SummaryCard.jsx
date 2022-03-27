@@ -66,6 +66,7 @@ function SummaryCard(props) {
     <li className={classes.list}>
       <Cards>
         <Title>{props.title}</Title>
+        <Hr />
         <Content>
           <p>{props.FirstField}</p>
           <p>{props.SecondField}</p>
@@ -96,8 +97,13 @@ function SummaryCard(props) {
 
 export default SummaryCard;
 
+const Hr = styled.hr`
+  margin-bottom: 5px;
+`;
+
 const Title = styled.h4`
-  line-height: 3rem;
+  line-height: 2rem;
+  margin: 0px;
 `;
 
 const Content = styled.div`
@@ -122,7 +128,7 @@ const Cards = styled.div`
 
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-    box-shadow: rgb(0 226 255 / 60%) 0px 0px 20px;
+    box-shadow: #fbffff 0px 0px 20px;
     transition: 0.25s;
   }
 `;
