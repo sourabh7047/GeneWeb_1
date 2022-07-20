@@ -1,8 +1,10 @@
 // jshint esversion:6
-const dotenv = require("dotenv").config();
-const express = require("express");
-const colors = require("colors");
-const cors = require("cors");
+import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
+import colors from "colors";
+import cors from "cors";
 
 const app = express();
 
@@ -15,8 +17,11 @@ const PORT = process.env.SERVER_PORT;
 
 // ----------------------------get requests
 
-app.use("/internal", require("./routes/Ncbi"));
-app.use("/toolname", require("./routes/Ebi"));
+import NcbiRoutes from "./routes/Ncbi.js"
+import EbiRoutes from "./routes/Ebi.js"
+
+app.use("/internal", NcbiRoutes);
+app.use("/toolname", EbiRoutes);
 
 // ---------------------------listen requests
 

@@ -1,13 +1,11 @@
-var express = require("express");
-const { route } = require("express/lib/application");
+import express from "express";
 var router = express.Router();
-const fs = require("fs");
-const path = require("path");
-const dir = __dirname;
-const https = require("https");
-const parseString = require("xml2js").parseString;
-const Espell = require("../Espell");
-const SumData = require("../SummaryData");
+import fs from "fs";
+import https from "https";
+import xml2js from "xml2js";
+const parseString = xml2js.parseString
+import Espell from "../Espell.js";
+import SumData from "../SummaryData.js";
 
 const base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
 
@@ -174,4 +172,4 @@ router.post("/:dbdata/download/:id", (request, response) => {
   );
 });
 
-module.exports = router;
+export default router

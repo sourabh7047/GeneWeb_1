@@ -1,7 +1,6 @@
-const res = require("express/lib/response");
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-function JobStatus(JobId, toolName) {
+export default function JobStatus(JobId, toolName) {
   var ResultAwaitOptions = {
     Method: "GET",
     headers: {
@@ -49,5 +48,3 @@ function JobStatus(JobId, toolName) {
     }, 5000);
   });
 }
-
-module.exports = JobStatus;

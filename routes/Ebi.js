@@ -1,11 +1,11 @@
-var express = require("express");
-const req = require("express/lib/request");
+import express from "express";
 var router = express.Router();
-const https = require("https");
-const parseString = require("xml2js").parseString;
-const fetch = require("node-fetch");
-const JobStatus = require("./Functions/JobStatus");
-const OutSeq = require("./Functions/OutSeq");
+import https  from "https";
+import xml2js from "xml2js";
+const parseString = xml2js.parseString
+import fetch from "node-fetch";
+import JobStatus from "./Functions/JobStatus.js";
+import OutSeq from "./Functions/OutSeq.js";
 
 const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
 
@@ -31,7 +31,7 @@ router.get("/parameterDetail/:toolname/:parameter", (request, response) => {
 router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   try {
     const toolName = request.params.toolname;
-    // const Rtype = request.params.Rtype;
+    // import Rtype = request.params.Rtype;
     console.log(toolName);
     // console.log(Rtype);
 
@@ -73,9 +73,9 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
         .then((Status) => {
           if (Status === "FINISHED") {
             // console.log("got result");
-            // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
-            // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
-            // const Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
+            // import Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
+            // import Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
+            // import Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
             const Sequence = OutSeq(JobId, toolName, Rtype) //out
               .then((res) => {
                 return response.json({ Response: res });
@@ -115,4 +115,5 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   }
 });
 
-module.exports = router;
+export default router
+
