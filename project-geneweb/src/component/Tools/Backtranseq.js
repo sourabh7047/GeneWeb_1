@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewlineText from "../NewlineText";
 import styled from "styled-components";
 import "./style.css";
+import Submit from "../../commons/SubmitButton";
 
 class Backtranseq extends Component {
   constructor(props) {
@@ -98,34 +99,39 @@ class Backtranseq extends Component {
       <Wrapper>
         <FormCard>
           <form onSubmit={this.onSubmit}>
-            <p>Protein sequence in any supported format:</p>
-            <textarea
-              onChange={this._onChange}
-              name="sequence"
-              value={this.state.value}
-              rows="6"
-              cols="100"
-            />
-            <div class="dropdown">
-              <button
-                class="btn btn-large btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Dropdown button
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                {table.map((obj) => {
-                  return <p onClick={this._onClick}>{obj.label[0]}</p>;
-                })}
+            <Formbody>
+              <p>Protein sequence in any supported format:</p>
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="55"
+              />
+              <div class="dropdown">
+                <button
+                  class="btn btn-large btn-secondary dropdown-toggle"
+                  style={QueryStyle}
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Dropdown button
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  {table.map((obj) => {
+                    return <p onClick={this._onClick}>{obj.label[0]}</p>;
+                  })}
+                </div>
               </div>
-            </div>
-            <button disabled={isInvalid} type="submit">
-              Submit
-            </button>
+            </Formbody>
+            <submitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+            </submitButtonAlign>
           </form>
         </FormCard>
         <Outform>
@@ -154,7 +160,16 @@ const INITIAL_STATE = {
   codontable: "",
 };
 
+const Formbody = styled.div`
+  margin: 20px;
+`;
+
+const QueryStyle = {
+  margin: "10px 0",
+};
+
 const FormCard = styled.div`
+  margin: 50px;
   height: 700px;
   width: 700px;
   border-radius: 10px;
@@ -169,6 +184,7 @@ const Wrapper = styled.div`
 `;
 
 const Outform = styled.div`
+  margin: 50px;
   height: 700px;
   width: 700px;
   border-radius: 10px;

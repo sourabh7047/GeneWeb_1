@@ -20,6 +20,7 @@ export default function JobStatus(JobId, toolName) {
       )
         .then((res) => res.text())
         .then((body) => {
+          console.log(body)
           if (body === "FINISHED") {
             console.log(body + "/");
             clearInterval(Progress);

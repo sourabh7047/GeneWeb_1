@@ -1,8 +1,8 @@
 import express from "express";
 var router = express.Router();
-import https  from "https";
+import https from "https";
 import xml2js from "xml2js";
-const parseString = xml2js.parseString
+const parseString = xml2js.parseString;
 import fetch from "node-fetch";
 import JobStatus from "./Functions/JobStatus.js";
 import OutSeq from "./Functions/OutSeq.js";
@@ -21,6 +21,7 @@ router.get("/parameterDetail/:toolname/:parameter", (request, response) => {
       })
       .on("end", () => {
         parseString(body, function (err, result) {
+          console.log(body)
           // console.log(result.parameter.values[0].value);
           response.send(result.parameter.values[0].value);
         });
@@ -32,28 +33,30 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   try {
     const toolName = request.params.toolname;
     // import Rtype = request.params.Rtype;
-    console.log(toolName);
+    // console.log(toolName);
+    console.log(request.body)
     // console.log(Rtype);
 
-    var SequenceData = new URLSearchParams(request.body).toString();
-    console.log(SequenceData);
+    var SequenceData = new URLSearchParams(request.body)
+    // console.log(SequenceData);
 
     var JobId = "";
 
     while (JobId === "" || JobId.endsWith("-p1m")) {
       const res = await fetch(
-        `https://www.ebi.ac.uk/Tools/services/rest/` + toolName + `/run`,
+        `https://www.ebi.ac.uk/Tools/services/rest/emboss_backtranseq/run`,
         {
           method: "post",
           body: SequenceData,
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
             Accept: "text/plain",
             "User-Agent": "test",
           },
         }
       );
 
+      console.log(res.status, 'val')
       if (res.status >= 200 && res.status <= 299) {
         const textRes = await res.text();
         JobId = textRes;
@@ -71,6 +74,7 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
     if (JobId.endsWith("-p2m")) {
       const StatusResult = JobStatus(JobId, toolName)
         .then((Status) => {
+          print(Status);
           if (Status === "FINISHED") {
             // console.log("got result");
             // import Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
@@ -78,6 +82,7 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
             // import Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
             const Sequence = OutSeq(JobId, toolName, Rtype) //out
               .then((res) => {
+                console.log("res", res);
                 return response.json({ Response: res });
               })
               .catch((err) => {
@@ -115,5 +120,4 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   }
 });
 
-export default router
-
+export default router;
