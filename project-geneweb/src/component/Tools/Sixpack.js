@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
+import styled from "styled-components";
 import NewlineText from "../NewlineText";
+import Submit from "../../commons/SubmitButton";
 
 // https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
@@ -34,7 +35,7 @@ class Sixpack extends Component {
 
   parameterDetail = () => {
     // eslint-disable-next-line no-unused-expressions
-    fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
+    fetch(`/toolname/parameterDetail/${this.state.toolname}/codontable`)
       .then(function (Response) {
         return Response.json();
       })
@@ -113,81 +114,130 @@ class Sixpack extends Component {
 
     const isInvalid = sequence === "" || codontable === "";
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <p>Protein sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="100"
-          />
-          <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p onClick={this._onClickCodon}>{value.label[0]}</p>;
-              })}
-            </div>
-          </div>
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
+      <Wrapper>
+        <FormCard>
+          <form onSubmit={this.onSubmit}>
+            <Formbody>
+              <p>Sixpack reads a DNA sequence and outputs the three forward and (optionally) three reverse translations in a visual manner.</p>
+              <p></p>
+              <p>Nuclic Acid sequence in any supported format:</p>
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="55"
+              />
               <div class="dropdown">
                 <button
                   class="btn btn-large btn-secondary dropdown-toggle"
+                  style={QueryStyle}
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  {key}
+                  Dropdown button
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {codontable.map((value, idx) => {
+                    return <p onClick={this._onClickCodon}>{value.label[0]}</p>;
+                  })}
                 </div>
               </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
-          <button disabled={isInvalid} type="submit">
-            Submit
-          </button>
-        </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              console.log(toolResponse);
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
-      </div>
+              {Object.keys(INITIAL_STATE).map((key, index) => {
+                return (
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-large btn-secondary dropdown-toggle"
+                      style={QueryStyle}
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      {key}
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <ul>
+                        {INITIAL_STATE[key].map((value) => {
+                          //   console.log(value);
+                          return (
+                            <li onClick={this._onClick} name={key}>
+                              {value}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                );
+                // INITIAL_STATE[key].map((_, idx) => {});
+              })}
+            </Formbody>
+            <submitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+            </submitButtonAlign>
+          </form>
+        </FormCard>
+        <Outform>
+          {isToolResponse ? (
+            <div style={{padding: '10px', margin: '10px'}}>
+              {toolResponse.map((line) => {
+                console.log(toolResponse);
+                return line;
+              })}
+            </div>
+          ) : (
+            <div>
+              <h4>nothing to show</h4>
+            </div>
+          )}
+        </Outform>
+      </Wrapper>
     );
   }
 }
 
 export default Sixpack;
+
+const FormCard = styled.div`
+  margin: 50px;
+  height: 700px;
+  width: 700px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+`;
+
+const Formbody = styled.div`
+  margin: 20px;
+`;
+
+const QueryStyle = {
+  margin: "10px 0",
+};
+
+const Outform = styled.div`
+  margin: 50px;
+  height: 700px;
+  width: 700px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+  overflow: scroll;
+
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;

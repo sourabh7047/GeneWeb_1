@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 
 
 export default function OutSeq(JobId, toolName, Result_Type) {
-  console.log(toolName);
+  console.log("toolname: ", toolName);
   // if (Result_Type === "aln-clustal_num") {
   return new Promise((resolve, reject) => {
     fetch(

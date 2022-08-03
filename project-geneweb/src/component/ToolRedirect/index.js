@@ -26,19 +26,19 @@ class ToolRedirect extends Component {
     console.log(location.state);
     // eslint-disable-next-line default-case
     switch (location.state.toolName) {
-      case "Backtranseq":
+      case "emboss_Backtranseq":
         return <Backtranseq locationFile={location.state} />;
-      case "sixpack":
+      case "emboss_Sixpack":
         return <Sixpack locationFile={location.state} />;
-      case "transeq":
+      case "emboss_Transeq":
         return <Transeq locationFile={location.state} />;
-      case "cpgplot":
+      case "emboss_Cpgplot":
         return <Cpgplot locationFile={location.state} />;
-      case "pepstats":
+      case "emboss_Pepstats":
         return <Pepstats locationFile={location.state} />;
       case "saps":
         return <SAPS locationFile={location.state} />;
-      case "newcpgreport":
+      case "emboss_newcpgreport":
         return <NewCpgReport locationFile={location.state} />;
       case "clustalo":
         return <ClustalOmega locationFile={location.state} />;

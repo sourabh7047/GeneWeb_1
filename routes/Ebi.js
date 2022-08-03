@@ -6,6 +6,7 @@ const parseString = xml2js.parseString;
 import fetch from "node-fetch";
 import JobStatus from "./Functions/JobStatus.js";
 import OutSeq from "./Functions/OutSeq.js";
+import querystring from "querystring"
 
 const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
 
@@ -32,24 +33,21 @@ router.get("/parameterDetail/:toolname/:parameter", (request, response) => {
 router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   try {
     const toolName = request.params.toolname;
-    // import Rtype = request.params.Rtype;
-    // console.log(toolName);
+    console.log(toolName);
     console.log(request.body)
-    // console.log(Rtype);
 
     var SequenceData = new URLSearchParams(request.body)
-    // console.log(SequenceData);
 
     var JobId = "";
 
     while (JobId === "" || JobId.endsWith("-p1m")) {
       const res = await fetch(
-        `https://www.ebi.ac.uk/Tools/services/rest/emboss_backtranseq/run`,
+        `https://www.ebi.ac.uk/Tools/services/rest/${toolName}/run`,
         {
           method: "post",
           body: SequenceData,
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
             Accept: "text/plain",
             "User-Agent": "test",
           },
@@ -72,15 +70,16 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
     }
 
     if (JobId.endsWith("-p2m")) {
-      const StatusResult = JobStatus(JobId, toolName)
-        .then((Status) => {
-          print(Status);
+      const StatusResult = await JobStatus(JobId, toolName)
+      .then((Status) => {
+          console.log("Status :", Status);
           if (Status === "FINISHED") {
             // console.log("got result");
             // import Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
             // import Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
             // import Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
-            const Sequence = OutSeq(JobId, toolName, Rtype) //out
+            console.log(toolName)
+            const Sequence = OutSeq(JobId, toolName, 'out') //out
               .then((res) => {
                 console.log("res", res);
                 return response.json({ Response: res });

@@ -28,7 +28,7 @@ class Backtranseq extends Component {
 
   parameterDetail = () => {
     // eslint-disable-next-line no-unused-expressions
-    fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
+    fetch(`/toolname/parameterDetail/${this.state.toolname}/codontable`)
       .then(function (Response) {
         return Response.json();
       })
@@ -136,10 +136,10 @@ class Backtranseq extends Component {
         </FormCard>
         <Outform>
           {isToolResponse ? (
-            <div>
+            <div style={{padding: '5px', margin: '10px',}}>
               {toolResponse.map((line) => {
                 console.log(toolResponse);
-                return <h6>{line}</h6>;
+                return <p>{line}</p>;
               })}
             </div>
           ) : (
@@ -190,4 +190,5 @@ const Outform = styled.div`
   border-radius: 10px;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+  overflow: scroll;
 `;
