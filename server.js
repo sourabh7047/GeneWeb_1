@@ -26,6 +26,10 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("project-geneweb/build"));
 }
 
+app.get("/master", (req,res)=>{
+  res.send("this is it")
+})
+
 // ---------------------------listen requests
 
 app.listen(PORT, function () {
