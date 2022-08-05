@@ -22,7 +22,7 @@ router.get("/parameterDetail/:toolname/:parameter", (request, response) => {
       })
       .on("end", () => {
         parseString(body, function (err, result) {
-          console.log(body)
+          // console.log(body)
           // console.log(result.parameter.values[0].value);
           response.send(result.parameter.values[0].value);
         });

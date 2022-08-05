@@ -11,6 +11,7 @@ const Menus = ({ anchorEl, handleClose, DbStatus }) => {
 
     await fetch("/internal/dbinfo")
       .then((response) => {
+        console.log(response)
         return response.json();
       })
       .then((text) => {
