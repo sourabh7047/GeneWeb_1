@@ -100,6 +100,8 @@ class Backtranseq extends Component {
         <FormCard>
           <form onSubmit={this.onSubmit}>
             <Formbody>
+            <p>EMBOSS Backtranseq reads a protein sequence and writes the nucleic acid sequence it is most likely to have come from.</p>
+            <p></p>
               <p>Protein sequence in any supported format:</p>
               <textarea
                 onChange={this._onChange}

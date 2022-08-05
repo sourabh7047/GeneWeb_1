@@ -27,7 +27,7 @@ const SignInPage = () => (
   <div>
     <Main>
       <Container>
-        <h1>SignIn</h1>
+        <h1 style={{padding: '50px', paddingLeft: '130px'}}>SignIn</h1>
         <SignInForm />
         <Wrapper>
           <SignInGoogle />
@@ -92,7 +92,7 @@ class SignInFormBase extends Component {
 
     return (
       <Div>
-        <Img src="https://bit.ly/2tlJLoz" />
+        {/* <Img src="https://bit.ly/2tlJLoz" /> */}
 
         {/* <span><a href="#">Forgot Password?</a></span> */}
 
@@ -122,14 +122,18 @@ class SignInFormBase extends Component {
   }
 }
 
+
 class SignInGoogleBase extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { error: null };
+    this.state = { ...INITIAL_STATE };
   }
 
+  
+  
   onSubmit = (event) => {
+    const { email, password } = this.state;
+
     this.props.firebase
       .doSignInWithGoogle()
       .then((socialAuthUser) => {
@@ -141,8 +145,8 @@ class SignInGoogleBase extends Component {
         });
       })
       .then(() => {
-        this.setState({ error: null });
-        this.props.history.push(ROUTES.HOME);
+        this.setState({ email: email});
+        this.props.history.push(ROUTES.SEARCH);
       })
       .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
@@ -161,7 +165,7 @@ class SignInGoogleBase extends Component {
     return (
       <form onSubmit={this.onSubmit}>
         {/* <button type="submit">Sign In with Google</button> */}
-        <MFontAwesomeIcon type="submit" icon={faGoogle} size="2x" />
+        <MFontAwesomeIcon type="submit" icon={faGoogle} size="2x" onClick={this.onSubmit.bind(this)} />
         {error && <p>{error.message}</p>}
       </form>
     );
