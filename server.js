@@ -5,8 +5,8 @@ dotenv.config();
 import express from "express";
 import colors from "colors";
 import cors from "cors";
-import NcbiRoutes from "./routes/Ncbi.js"
-import EbiRoutes from "./routes/Ebi.js"
+import NcbiRoutes from "./routes/Ncbi.js";
+import EbiRoutes from "./routes/Ebi.js";
 
 const app = express();
 
@@ -19,12 +19,14 @@ const PORT = process.env.PORT || 8080;
 
 // ----------------------------get requests
 
-
 app.use("/internal", NcbiRoutes);
 app.use("/toolname", EbiRoutes);
 
-if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('project-geneweb/build'))
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("project-geneweb/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
 }
 
 // ---------------------------listen requests
