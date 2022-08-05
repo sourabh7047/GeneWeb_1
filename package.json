@@ -5,12 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "install-client": "npm install --prefix client",
+    "build": "cd project-geneweb && npm run build",
+    "install-client": "cd project-geneweb && npm install",
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix project-geneweb",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "heroku-postbuild": "npm run install-client && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "\"sourabh asharma\"",
