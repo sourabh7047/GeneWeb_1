@@ -2,6 +2,9 @@
   "name": "genomeweb-backend",
   "version": "5.9.1",
   "description": "\"backend of genome project\"",
+  "engines": {
+    "node": "14.17.x"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
