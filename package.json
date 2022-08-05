@@ -6,11 +6,11 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd project-geneweb && npm run build",
-    "install-client": "cd project-geneweb && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build",
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run client && npm run build",
     "start": "node server.js",
-    "client": "cd project-geneweb && npm start",
+    "client": "cd client && npm start",
     "dev": "concurrently -n 'server,client' -c 'red,green'  \"nodemon server.js\" \"npm run client\""
   },
   "author": "\"sourabh asharma\"",
