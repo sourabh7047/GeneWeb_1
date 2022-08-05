@@ -1,7 +1,6 @@
-const res = require("express/lib/response");
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-function JobStatus(JobId, toolName) {
+export default function JobStatus(JobId, toolName) {
   var ResultAwaitOptions = {
     Method: "GET",
     headers: {
@@ -21,9 +20,11 @@ function JobStatus(JobId, toolName) {
       )
         .then((res) => res.text())
         .then((body) => {
+          console.log("body", body)
           if (body === "FINISHED") {
             console.log(body + "/");
             clearInterval(Progress);
+            // console.log("done")
             resolve(body); //resolve
           } else if (body === "NOT FOUND") {
             console.log(body + "//");
@@ -49,5 +50,3 @@ function JobStatus(JobId, toolName) {
     }, 5000);
   });
 }
-
-module.exports = JobStatus;

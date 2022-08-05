@@ -4,7 +4,6 @@ import React from "react";
 // react dom is used to pick a dom elemnt from the index.html either by class or id or by the tag or by any combination and convert and change its
 // functioning now this can add html or actual javascript
 import ReactDOM from "react-dom";
-import File from "./component/test/File";
 import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
 import Firebase, { FirebaseContext } from './component/Firebase';
@@ -22,7 +21,7 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-serviceWorker.unregister();
+
 
 // so to convert the javascript into the form which is readable by the  html elements then...
 // you can add any sort of javascript text whether it is text a math formula or a script with any style attached

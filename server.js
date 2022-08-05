@@ -1,13 +1,12 @@
 // jshint esversion:6
-const express = require("express");
-const colors = require("colors");
-const cors = require("cors");
+import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
+import colors from "colors";
+import cors from "cors";
 
 const app = express();
-
-// -----------------------------base site
-
-const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
 
 // ----------------------------middleware
 
@@ -18,11 +17,14 @@ const PORT = process.env.SERVER_PORT;
 
 // ----------------------------get requests
 
-app.use("/internal", require("./routes/Ncbi"));
-app.use("/toolname", require("./routes/Ebi"));
+import NcbiRoutes from "./routes/Ncbi.js"
+import EbiRoutes from "./routes/Ebi.js"
+
+app.use("/internal", NcbiRoutes);
+app.use("/toolname", EbiRoutes);
 
 // ---------------------------listen requests
 
-app.listen(5000, function () {
+app.listen(PORT, function () {
   console.log(`server has started on port ${PORT}`.yellow.bold);
 });

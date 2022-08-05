@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import "./style.css";
 import { AuthUserContext } from "../Session";
+import NewlineText from "../NewlineText";
+import styled from "styled-components";
+import Submit from "../../commons/SubmitButton";
 
 // https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
@@ -16,10 +19,13 @@ class Sixpack extends Component {
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
+      Rtype: "out",
       email: JSON.parse(localStorage.getItem("authUser")).email,
       codontable: [],
       codon: "",
       sequence: "",
+      isToolResponse: false,
+      toolResponse: [],
       ...INITIAL_STATE,
     };
   }
@@ -57,9 +63,16 @@ class Sixpack extends Component {
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
+  handleToolResponse = (data) => {
+    this.setState({
+      toolResponse: data,
+      isToolResponse: true,
+    });
+  };
+
   onSubmit = (event) => {
     console.log(this.state);
-    fetch(`/toolname/emboss_${this.state.toolname}/run`, {
+    fetch(`/toolname/emboss_${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
@@ -77,7 +90,10 @@ class Sixpack extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            console.log(result);
+            // console.log(typeof result.Response);
+            NewlineText(result.Response).then((array) => {
+              this.handleToolResponse(array);
+            });
           });
         } else {
           console.log(res.status);
@@ -95,73 +111,136 @@ class Sixpack extends Component {
   };
 
   render() {
-    const { sequence, codontable } = this.state;
+    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <p>Protein sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="100"
-          />
-          <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p onClick={this._onClickCodon}>{value.label[0]}</p>;
-              })}
-            </div>
-          </div>
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
+      <Wrapper>
+        <FormCard>
+          <form onSubmit={this.onSubmit}>
+            <Formbody>
+              A program to translate nucleic acid sequences to their
+              corresponding peptide sequences. It can translate to the three
+              forward and three reverse frames, and output multiple frame
+              translations at once.
+              <p></p>
+              <p>nucleic acid sequences in any supported format:</p>
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="55"
+              />
               <div class="dropdown">
                 <button
                   class="btn btn-large btn-secondary dropdown-toggle"
+                  style={QueryStyle}
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  {key}
+                  Dropdown button
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {codontable.map((value, idx) => {
+                    return <p onClick={this._onClickCodon}>{value.label[0]}</p>;
+                  })}
                 </div>
               </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
-          <button disabled={isInvalid} type="submit">
-            Submit
-          </button>
-        </form>
-      </div>
+              {Object.keys(INITIAL_STATE).map((key, index) => {
+                return (
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-large btn-secondary dropdown-toggle"
+                      style={QueryStyle}
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      {key}
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <ul>
+                        {INITIAL_STATE[key].map((value) => {
+                          //   console.log(value);
+                          return (
+                            <li onClick={this._onClick} name={key}>
+                              {value}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                );
+                // INITIAL_STATE[key].map((_, idx) => {});
+              })}
+            </Formbody>
+            <submitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+            </submitButtonAlign>
+          </form>
+        </FormCard>
+        <Outform>
+          {isToolResponse ? (
+            <div style={{ padding: "10px", margin: "10px" }}>
+              {toolResponse.map((line) => {
+                console.log(toolResponse);
+                return <p>{line}</p>;
+              })}
+            </div>
+          ) : (
+            <div>
+              <h4>nothing to show</h4>
+            </div>
+          )}
+        </Outform>
+      </Wrapper>
     );
   }
 }
 
 export default Sixpack;
+
+const Formbody = styled.div`
+  margin: 20px;
+`;
+
+const QueryStyle = {
+  margin: "10px 0",
+};
+
+const FormCard = styled.div`
+  margin: 50px;
+  height: 700px;
+  width: 700px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Outform = styled.div`
+  margin: 50px;
+  height: 700px;
+  width: 700px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+  overflow: scroll;
+`;

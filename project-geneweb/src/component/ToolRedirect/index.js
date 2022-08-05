@@ -10,6 +10,7 @@ import NewCpgReport from "../Tools/NewCpgReport";
 import ClustalOmega from "../Tools/Clustal_Omega";
 import Kalign from "../Tools/Kalign";
 import Muscle from "../Tools/Muscle";
+import Tcoffee from "../Tools/Tcoffee";
 
 class ToolRedirect extends Component {
   constructor(props) {
@@ -25,19 +26,19 @@ class ToolRedirect extends Component {
     console.log(location.state);
     // eslint-disable-next-line default-case
     switch (location.state.toolName) {
-      case "Backtranseq":
+      case "emboss_Backtranseq":
         return <Backtranseq locationFile={location.state} />;
-      case "sixpack":
+      case "emboss_Sixpack":
         return <Sixpack locationFile={location.state} />;
-      case "transeq":
+      case "emboss_Transeq":
         return <Transeq locationFile={location.state} />;
-      case "cpgplot":
+      case "emboss_Cpgplot":
         return <Cpgplot locationFile={location.state} />;
-      case "pepstats":
+      case "emboss_Pepstats":
         return <Pepstats locationFile={location.state} />;
       case "saps":
         return <SAPS locationFile={location.state} />;
-      case "newcpgreport":
+      case "emboss_newcpgreport":
         return <NewCpgReport locationFile={location.state} />;
       case "clustalo":
         return <ClustalOmega locationFile={location.state} />;
@@ -45,6 +46,8 @@ class ToolRedirect extends Component {
         return <Kalign locationFile={location.state} />;
       case "muscle":
         return <Muscle locationFile={location.state} />;
+      case "tcoffee":
+        return <Tcoffee locationFile={location.state} />;
     }
   }
 

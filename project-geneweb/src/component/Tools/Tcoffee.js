@@ -1,56 +1,25 @@
 import React, { Component } from "react";
 import "./style.css";
 import { AuthUserContext } from "../Session";
-import NewlineText from "../NewlineText";
 
 var INITIAL_STATE = {
-  guidetreeout: ["default", "documented", "terse", "verbose"],
-  dismatout: [
-    "BACSU",
-    "CHICK",
-    "DROME",
-    "ECOLI",
-    "HUMAN",
-    "MOUSE",
-    "RAT",
-    "XENLA",
-    "YEAST",
-    "swp23s",
-  ],
-  dealign: ["lys-arg", "lys-arg-his"],
-  mbed: ["true", "false"],
-  mbediteration: ["true", "false"],
-  iterations: [0, 1, 2, 3, 4, 5],
-  gtiterations: [-1, 0, 1, 2, 3, 4, 5],
-  hummiterations: [-1, 0, 1, 2, 3, 4, 5],
-  outfmt: [
-    "clustal_num",
-    "clustal",
-    "fa",
-    "msf",
-    "nexus",
-    "phylip",
-    "selex",
-    "stockholm",
-    "vienna",
-  ],
+  format: ["clustalw", "fasta_aln", "msf", "phylip", "score_html"],
+  matrix: ["none", "blosum", "pam"],
   order: ["aligned", "input"],
   stype: ["protein", "dna", "rna"],
 };
 
-class SAPS extends Component {
+class Tcoffee extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
-      Rtype: "aln-clustal_num",
       email: JSON.parse(localStorage.getItem("authUser")).email,
       // codontable: [],
       // codon: "",
-      sequence: null,
-      isToolResponse: false,
-      toolResponse: [],
+      sequence: "",
+      // orfminsize: 1,
       ...INITIAL_STATE,
     };
   }
@@ -89,28 +58,15 @@ class SAPS extends Component {
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
-  handleToolResponse = (data) => {
-    this.setState({
-      toolResponse: data,
-      isToolResponse: true,
-    });
-  };
-
   onSubmit = (event) => {
-    // console.log(this.state);
-    fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
+    console.log(this.state);
+    fetch(`/toolname/${this.state.toolname}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
-        guidetreeout: this.state.guidetreeout,
-        dismatout: this.state.dismatout,
-        dealign: this.state.dealign,
-        mbed: this.state.mbed,
-        mbediteration: this.state.mbediteration,
-        iterations: this.state.iterations,
-        gtiterations: this.state.gtiterations,
-        hummiterations: this.state.hummiterations,
-        outfmt: this.state.outfmt,
+        // codon: this.state.codon,
+        format: this.state.format,
+        matrix: this.state.matrix,
         order: this.state.order,
         stype: this.state.stype,
         sequence: this.state.sequence,
@@ -121,25 +77,20 @@ class SAPS extends Component {
     })
       .then((res) => {
         if (res.status === 200) {
-          // console.log(res.json());
           res.json().then((result) => {
-            // console.log(typeof result.Response);
-            NewlineText(result.Response).then((array) => {
-              this.handleToolResponse(array);
-            });
+            console.log(result.Response);
+            //convert to base64
+            // var b64Response = btoa(
+            //   unescape(encodeURIComponent(result.Response))
+            // );
+            // // console.log(b64Response);
+
+            //create an image
+            // var outputImg = document.createElement("img");
+            // outputImg.src = "data:image/png;base64," + b64Response;
+            // console.log(outputImg.src);
+            // document.body.appendChild(outputImg);
           });
-
-          //   //convert to base64
-          //   // var b64Response = btoa(
-          //   //   unescape(encodeURIComponent(result.Response))
-          //   // );
-          //   // // console.log(b64Response);
-
-          //   //create an image
-          //   // var outputImg = document.createElement("img");
-          //   // outputImg.src = "data:image/png;base64," + b64Response;
-          //   // console.log(outputImg.src);
-          //   // document.body.appendChild(outputImg);
         } else {
           console.log(res.status);
           console.log(res.body);
@@ -153,7 +104,7 @@ class SAPS extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const { sequence, codontable } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
@@ -217,20 +168,9 @@ class SAPS extends Component {
             Submit
           </button>
         </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
       </div>
     );
   }
 }
 
-export default SAPS;
+export default Tcoffee;

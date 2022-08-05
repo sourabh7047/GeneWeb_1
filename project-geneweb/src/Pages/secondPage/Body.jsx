@@ -1,10 +1,10 @@
 import React from "react";
 import BodyLayout from "./BodyLayout";
-import Cards from "./Cards";
 import classes from "./Header.module.css";
 import Summary from "./Summary";
 import PaginationComponent from "./PaginationComponent";
 import Webcontext from "./context";
+import styled from "styled-components";
 
 function Body(props) {
   const dataSetLength = props.dataConstruct.length;
@@ -14,15 +14,14 @@ function Body(props) {
       <Webcontext.Consumer>
         {(data) => (
           <BodyLayout>
-            <div className={classes.data}>
+            <Data>
               <Summary dataConstruct={data} />
-            </div>
-            <div>
-              <PaginationComponent
-                totalDataset={data.length}
-                dataConstruct={props.dataConstruct}
-              />
-            </div>
+            </Data>
+
+            <PaginationComponent
+              totalDataset={data.length}
+              dataConstruct={props.dataConstruct}
+            />
           </BodyLayout>
         )}
       </Webcontext.Consumer>
@@ -30,6 +29,9 @@ function Body(props) {
   );
 }
 
-Body.propTypes = {};
-
 export default Body;
+
+const Data = styled.div`
+  overflow: auto;
+  height: 100%;
+`;

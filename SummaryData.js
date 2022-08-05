@@ -1,4 +1,4 @@
-function SumData(singleQueryPage, DBdata) {
+export default function SumData(singleQueryPage, DBdata) {
   let summary = [];
 
   switch (DBdata) {
@@ -180,5 +180,3 @@ function SumData(singleQueryPage, DBdata) {
 
   return summary;
 }
-
-module.exports = SumData;

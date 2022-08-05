@@ -1,11 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import SummaryList from "./SummaryList";
-import classes from "./Summary.module.css";
-import { ReactComponent as Puff } from '../../Assets/puff.svg';
-
-
-
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import Styled from "styled-components";
 
 function Summary(props) {
   // pagination
@@ -15,7 +12,6 @@ function Summary(props) {
   // summary
   const [isloading, setisloading] = useState(true);
   const [loadingSummary, setLoadingSummary] = useState([]);
- 
 
   // let pages = [];
 
@@ -34,24 +30,40 @@ function Summary(props) {
         setLoadingSummary(data.summary);
         setisloading(false);
       });
-
-
   }, []);
 
-  if (isloading) {
-    return (
-      <section class={classes.loading}>
-        <Puff/>
-        <p>Loading...</p>
-      </section>
-    );
-  }
-
   return (
-    <div className={`${classes.innerlayout} `}>
-      <SummaryList summaryItemList={loadingSummary} dataConstruct={props.dataConstruct} />
-    </div>
+    <>
+      {isloading ? (
+        <Loading>
+          <Puff />
+          <p>Loading...</p>
+        </Loading>
+      ) : (
+        <Innerlayout>
+          <SummaryList
+            summaryItemList={loadingSummary}
+            dataConstruct={props.dataConstruct}
+          />
+        </Innerlayout>
+      )}
+    </>
   );
 }
 
 export default Summary;
+
+const Loading = Styled.div`
+position: relative;
+display: flex;
+flex-direction: column; 
+justify-content: space-around;
+align-items: center;
+top: 50%;
+align-content: center;
+`;
+
+const Innerlayout = Styled.div`
+flex: 1;
+  margin-right: 2rem;
+`;

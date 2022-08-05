@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Cards from "./Cards";
+// import Cards from "./Cards";
 import classes from "./SummaryCard.module.css";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,6 +7,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import FileFormat from "./FileFormat";
 import Formatmenus from "./Formatmenus";
 import download from "downloadjs";
+import styled from "styled-components";
 
 function SummaryCard(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -16,12 +17,16 @@ function SummaryCard(props) {
   }
 
   async function handleClose(id, format) {
+    // console.log("entered ///////////////////////////");
     setAnchorEl(null);
     if (format !== "backdropClick") {
       var retmode = "";
       var rettype = "";
       FileFormat.databaseList.forEach((database) => {
+        console.log(database + "   " + props.dataConstruct.dbdata);
+
         if (database === props.dataConstruct.dbdata) {
+          // console.log(";;;;;;;;;;;;;;;;;;;;;;;");
           retmode = FileFormat.databaseData[database].Filetype[format].retmode;
           rettype = FileFormat.databaseData[database].Filetype[format].retype;
         }
@@ -32,6 +37,7 @@ function SummaryCard(props) {
         retmode: retmode,
         rettype: rettype,
       };
+
       console.log(Acc);
       await fetch(`/internal/${props.dataConstruct.dbdata}/download/${Acc}`, {
         method: "POST",
@@ -59,8 +65,9 @@ function SummaryCard(props) {
   return (
     <li className={classes.list}>
       <Cards>
-        <h4>{props.title}</h4>
-        <div style={{ paddingBottom: "12px" }} className={classes.flex}>
+        <Title>{props.title}</Title>
+        <Hr />
+        <Content>
           <p>{props.FirstField}</p>
           <p>{props.SecondField}</p>
           <p>{props.ThirdField}</p>
@@ -82,12 +89,46 @@ function SummaryCard(props) {
             Format={props.Format}
             id={props.FirstField}
           />
-        </div>
-
-        <hr className={classes.hrStyle} />
+        </Content>
       </Cards>
     </li>
   );
 }
 
 export default SummaryCard;
+
+const Hr = styled.hr`
+  margin-bottom: 5px;
+`;
+
+const Title = styled.h4`
+  line-height: 2rem;
+  margin: 0px;
+`;
+
+const Content = styled.div`
+  line-height: 1rem;
+`;
+
+const Cards = styled.div`
+  width: 100%;
+  height: 220px;
+  color: white;
+  margin: 20px 0px;
+  padding: 20px;
+  gap: 20px;
+  display: block;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  background-color: rgba(201, 75, 236, 0.151);
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 0px 0px;
+  border: 1px rgba(255, 255, 255, 0.4) solid;
+  border-bottom: 1px rgba(40, 40, 40, 0.35) solid;
+  border-right: 1px rgba(40, 40, 40, 0.35) solid;
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
+    box-shadow: #fbffff 0px 0px 20px;
+    transition: 0.25s;
+  }
+`;

@@ -7,16 +7,17 @@ import WebContext from "./context";
 import { withRouter } from "react-router-dom";
 
 const ToolList = [
-  "Backtranseq",
-  "sixpack",
-  "transeq",
-  "cpgplot",
-  "pepstats",
+  "emboss_Backtranseq",
+  "emboss_Sixpack",
+  "emboss_Transeq",
+  "emboss_Cpgplot",
+  "emboss_Pepstats",
   "saps",
-  "newcpgreport",
+  "emboss_newcpgreport",
   "clustalo",
   "kalign",
-  "muscle"
+  "muscle",
+  "tcoffee",
 ];
 
 class ToolsMenu extends Component {

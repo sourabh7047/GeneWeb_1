@@ -1,8 +1,8 @@
-const fetch = require("node-fetch");
-const https = require("https");
+import fetch from "node-fetch";
 
-function OutSeq(JobId, toolName, Result_Type) {
-  console.log(toolName);
+
+export default function OutSeq(JobId, toolName, Result_Type) {
+  console.log("toolname: ", toolName);
   // if (Result_Type === "aln-clustal_num") {
   return new Promise((resolve, reject) => {
     fetch(
@@ -63,4 +63,3 @@ function OutSeq(JobId, toolName, Result_Type) {
   // }
 }
 
-module.exports = OutSeq;
