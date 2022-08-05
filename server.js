@@ -24,7 +24,7 @@ app.use("/internal", NcbiRoutes);
 app.use("/toolname", EbiRoutes);
 
 if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('./project-geneweb/build'))
+  app.use(express.static('project-geneweb/build'))
 }
 
 // ---------------------------listen requests
