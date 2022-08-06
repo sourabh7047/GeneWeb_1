@@ -8,7 +8,8 @@ import cors from "cors";
 import NcbiRoutes from "./routes/Ncbi.js";
 import EbiRoutes from "./routes/Ebi.js";
 import path from "path";
-const __dirname = path.resolve()
+const moduleURL = new URL(import.meta.url);
+const __dirname = path.dirname(moduleURL.pathname);
 
 const app = express();
 
@@ -23,10 +24,10 @@ const PORT = process.env.PORT || 5000;
 
 app.use("/internal", NcbiRoutes);
 app.use("/toolname", EbiRoutes);
-console.log(__dirname)
+// console.log(__dirname,"/client/build")
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client/build")));
+  app.use(express.static(path.join(__dirname, "/client/build")));
 
   app.use("*", (req, res) => {
     res.sendFile(path.join(__dirname, 'client/build/index.html'))
