@@ -3,7 +3,7 @@
   "version": "5.9.1",
   "description": "\"backend of genome project\"",
   "engines": {
-    "node": "^14 || ^15"
+    "node": "14.17.x"
   },
   "main": "index.js",
   "scripts": {

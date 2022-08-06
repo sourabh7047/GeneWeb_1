@@ -27,8 +27,10 @@ app.use("/toolname", EbiRoutes);
 // console.log(__dirname,"/client/build")
 
 if (process.env.NODE_ENV === "production") {
+  // serves any static file
   app.use(express.static(path.join(__dirname, "/client/build")));
 
+  // Handle react routing, return all request to react app
   app.use("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client/build","index.html"))
   });
