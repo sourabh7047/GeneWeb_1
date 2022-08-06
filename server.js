@@ -8,6 +8,7 @@ import cors from "cors";
 import NcbiRoutes from "./routes/Ncbi.js";
 import EbiRoutes from "./routes/Ebi.js";
 import path from "path";
+const __dirname = path.resolve()
 
 const app = express();
 
