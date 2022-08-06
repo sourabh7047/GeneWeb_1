@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "production") {
 
   // Handle react routing, return all request to react app
   app.use("*", (req, res) => {
-    res.sendFile(path.join(__dirname+"client/build/index.html"))
+    res.sendFile(path.join(__dirname+"/client/build/index.html"))
   });
 }
 
