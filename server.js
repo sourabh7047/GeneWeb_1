@@ -1,12 +1,12 @@
 // jshint esversion:6
-const dotenv =require("dotenv");
+const dotenv = require("dotenv");
 dotenv.config();
 
 const express = require("express");
-const colors =require( "colors");
+const colors = require("colors");
 const cors = require("cors");
 const NcbiRoutes = require("./routes/Ncbi.js");
-const EbiRoutes =require( "./routes/Ebi.js");
+const EbiRoutes = require("./routes/Ebi.js");
 const path = require("path");
 // const moduleURL = new URL(const.meta.url);
 // const __dirname = path.dirname(moduleURL.pathname);
@@ -24,15 +24,15 @@ const PORT = process.env.PORT || 5000;
 
 app.use("/internal", NcbiRoutes);
 app.use("/toolname", EbiRoutes);
-// console.log(__dirname+"/client/build")
+// console.log(path.join(__dirname, "/client/build"));
 
 if (process.env.NODE_ENV === "production") {
   // serves any static file
-  app.use(express.static(path.join(__dirname+"/client/build")));
+  app.use(express.static(path.join(__dirname, "client/build")));
 
   // Handle react routing, return all request to react app
-  app.use("*", (req, res) => {
-    res.sendFile(path.join(__dirname+"/client/build/index.html"))
+  app.use("*", function(req, res){
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
 
