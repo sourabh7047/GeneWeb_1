@@ -23,7 +23,6 @@ const PORT = process.env.PORT || 8080;
 app.use("/internal", NcbiRoutes);
 app.use("/toolname", EbiRoutes);
 
-console.log(__dirname, 'client/build')
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 
