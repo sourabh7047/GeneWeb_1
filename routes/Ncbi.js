@@ -1,11 +1,11 @@
-import express from "express";
+const express = require("express");
 var router = express.Router();
-import fs from "fs";
-import https from "https";
-import xml2js from "xml2js";
+const fs = require("fs");
+const https = require("https");
+const xml2js = require("xml2js");
 const parseString = xml2js.parseString
-import Espell from "../Espell.js";
-import SumData from "../SummaryData.js";
+const Espell = require("../Espell.js");
+const SumData = require("../SummaryData.js");
 
 const base = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
 
@@ -172,4 +172,4 @@ router.post("/:dbdata/download/:id", (request, response) => {
   );
 });
 
-export default router 
+module.exports =  router 

@@ -1,7 +1,6 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-
-export default function OutSeq(JobId, toolName, Result_Type) {
+function OutSeq(JobId, toolName, Result_Type) {
   console.log("toolname: ", toolName);
   // if (Result_Type === "aln-clustal_num") {
   return new Promise((resolve, reject) => {
@@ -63,3 +62,4 @@ export default function OutSeq(JobId, toolName, Result_Type) {
   // }
 }
 
+module.exports = OutSeq;

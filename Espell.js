@@ -1,7 +1,7 @@
-import xml2js from "xml2js";
-const parseString = xml2js.parseString
+const xml2js = require("xml2js");
+const parseString = xml2js.parseString;
 
-export default function Espell(body, Queryterm) {
+ function Espell(body, Queryterm) {
   let NewQueryterm = "";
   parseString(body, function (err, result) {
     let termCount = 0;
@@ -24,3 +24,4 @@ export default function Espell(body, Queryterm) {
   return Queryterm;
 }
 
+module.exports = Espell

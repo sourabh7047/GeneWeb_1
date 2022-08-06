@@ -1,6 +1,6 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-export default function JobStatus(JobId, toolName) {
+function JobStatus(JobId, toolName) {
   var ResultAwaitOptions = {
     Method: "GET",
     headers: {
@@ -20,7 +20,7 @@ export default function JobStatus(JobId, toolName) {
       )
         .then((res) => res.text())
         .then((body) => {
-          console.log("body", body)
+          console.log("body", body);
           if (body === "FINISHED") {
             console.log(body + "/");
             clearInterval(Progress);
@@ -50,3 +50,5 @@ export default function JobStatus(JobId, toolName) {
     }, 5000);
   });
 }
+
+module.exports = JobStatus

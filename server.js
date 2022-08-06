@@ -1,15 +1,15 @@
 // jshint esversion:6
-import dotenv from "dotenv";
+const dotenv =require("dotenv");
 dotenv.config();
 
-import express from "express";
-import colors from "colors";
-import cors from "cors";
-import NcbiRoutes from "./routes/Ncbi.js";
-import EbiRoutes from "./routes/Ebi.js";
-import path from "path";
-const moduleURL = new URL(import.meta.url);
-const __dirname = path.dirname(moduleURL.pathname);
+const express = require("express");
+const colors =require( "colors");
+const cors = require("cors");
+const NcbiRoutes = require("./routes/Ncbi.js");
+const EbiRoutes =require( "./routes/Ebi.js");
+const path = require("path");
+// const moduleURL = new URL(const.meta.url);
+// const __dirname = path.dirname(moduleURL.pathname);
 
 const app = express();
 

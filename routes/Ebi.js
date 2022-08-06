@@ -1,12 +1,12 @@
-import express from "express";
+const express = require("express");
 var router = express.Router();
-import https from "https";
-import xml2js from "xml2js";
+const https = require("https");
+const xml2js = require("xml2js");
 const parseString = xml2js.parseString;
-import fetch from "node-fetch";
-import JobStatus from "./Functions/JobStatus.js";
-import OutSeq from "./Functions/OutSeq.js";
-import querystring from "querystring"
+const fetch = require("node-fetch");
+const JobStatus = require("./Functions/JobStatus.js");
+const OutSeq = require("./Functions/OutSeq.js");
+const querystring = require("querystring")
 
 const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
 
@@ -75,9 +75,9 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
           console.log("Status :", Status);
           if (Status === "FINISHED") {
             // console.log("got result");
-            // import Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
-            // import Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
-            // import Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
+            // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
+            // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
+            // const Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
             console.log(toolName)
             const Sequence = OutSeq(JobId, toolName, 'out') //out
               .then((res) => {
@@ -119,4 +119,4 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   }
 });
 
-export default router;
+module.exports = router;
