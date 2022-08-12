@@ -22,11 +22,10 @@ const ToolList = [
 
 class ToolsMenu extends Component {
   toolRedirect(e, webFile) {
-    // console.log(e.currentTarget.innerText);
+    console.log("toolmenu");
     this.props.history.push({
-      pathname: `/webenv/${webFile.webenv}/tools/${e.currentTarget.innerText}`,
+      pathname: `/tools/${e.currentTarget.innerText}`,
       state: {
-        webFile: webFile,
         toolName: e.currentTarget.innerText,
       },
     });

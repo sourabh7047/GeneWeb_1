@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Formbody = styled.div`
+  position: relative;
   margin: 20px;
   width: 95%;
 `;
@@ -18,6 +19,7 @@ const CodonQuery = {
 };
 
 const FormCard = styled.div`
+  position: relative;
   margin: 50px;
   height: 700px;
   width: 700px;
@@ -47,6 +49,9 @@ const Outform = styled.div`
 const SubmitButtonAlign = styled.div`
   display: flex;
   justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  left: 11.5yrem;
 `;
 
 const PuffFit = styled.div`

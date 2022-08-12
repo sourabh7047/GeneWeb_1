@@ -15,30 +15,27 @@ import SignInPage from "./component/SignIn";
 import Navigation from "./component/Navigation";
 import * as ROUTES from "./routes";
 import HomePage from "./component/Home";
-import Backtranseq from "./component/Tools/Backtranseq";
 import ToolRedirect from "./component/ToolRedirect";
-import Home from "./component/Home";
 import "./App.css";
+import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
   return (
     <div>
       <Switch>
-        <Route exact path={ROUTES.LANDING} component={LandingPage} />
         <Route path={ROUTES.SIGN_IN} component={SignInPage} exact />
+        <Route exact path={ROUTES.LANDING} component={LandingPage} />
         <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
         <Route path={ROUTES.HOME} component={HomePage} />
         <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-        <Route path={ROUTES.TOOLS} component={Backtranseq} />
-        {/* <Route path={ROUTES.ADMIN} component={AdminPage} /> */}
-        <Route path={ROUTES.SEARCH} exact component={FirstPage} />
+        <PrivateRoute path={ROUTES.SEARCH} exact component={FirstPage} />
         <Route
           path="/:dbdata/webenv/:webenv/page/:page"
           component={(prop) => (
             <SecondPage key={window.location.pathname}></SecondPage>
           )}
         />
-        <Route path="/webenv/:webenv/tools/:tools" component={ToolRedirect} />
+        <PrivateRoute path="/tools/:tools" component={ToolRedirect} />
         <Route path={ROUTES.SIGN_UP} component={SignUpPage} exact />
       </Switch>
     </div>

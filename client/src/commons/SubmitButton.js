@@ -4,11 +4,9 @@ const Submit = styled.button.attrs(props=>({
   type: 'submit',
   disabled: props.isInvalid
 }))`
-  position: relative;
-  bottom: 0px;
-  left: 15rem;
+ 
   color: #090909;
-  margin: 10px 0;
+  margin: 10px 20px;
   padding: 0.7em 1.7em;
   font-size: 18px;
   border-radius: 0.5em;

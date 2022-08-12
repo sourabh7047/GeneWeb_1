@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
 
 var INITIAL_STATE = {
   format: ["clustalw", "fasta_aln", "msf", "phylip", "score_html"],
@@ -116,7 +115,7 @@ class Tcoffee extends Component {
             name="sequence"
             value={this.state.value}
             rows="6"
-            cols="100"
+            cols="62"
           />
           {/* <div class="dropdown">
             <button

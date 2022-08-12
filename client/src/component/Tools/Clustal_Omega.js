@@ -1,7 +1,19 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
 import NewlineText from "../NewlineText";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import { userEmail } from "../Firebase/firebase";
+import Submit from "../../commons/SubmitButton";
+import Grid from "@mui/material/Grid";
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Outform,
+  SubmitButtonAlign,
+  PuffFit,
+} from "./styles";
 
 var INITIAL_STATE = {
   guidetreeout: ["default", "documented", "terse", "verbose"],
@@ -38,6 +50,20 @@ var INITIAL_STATE = {
   stype: ["protein", "dna", "rna"],
 };
 
+var Memory = [
+  "guidetreeout",
+  "dismatout",
+  "dealign",
+  "mbed",
+  "mbediteration",
+  "iterations",
+  "gtiterations",
+  "hummiterations",
+  "outfmt",
+  "order",
+  "stype",
+];
+
 class SAPS extends Component {
   constructor(props) {
     super(props);
@@ -45,11 +71,12 @@ class SAPS extends Component {
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
       Rtype: "aln-clustal_num",
-      email: JSON.parse(localStorage.getItem("authUser")).email,
+      email: userEmail,
       // codontable: [],
       // codon: "",
       sequence: null,
       isToolResponse: false,
+      isToolQuarySend: false,
       toolResponse: [],
       ...INITIAL_STATE,
     };
@@ -72,6 +99,7 @@ class SAPS extends Component {
   // };
 
   _onChange = (e) => {
+    console.log(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   };
 
@@ -96,7 +124,22 @@ class SAPS extends Component {
     });
   };
 
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+    Object.keys(INITIAL_STATE).map((key, idx) => {
+      return (Memory[idx] = key);
+    });
+  };
+
+  handleReset = () => {
+    // this.setState({ sequence: ""});
+    this.setState({ isToolQuarySend: false });
+  };
+
   onSubmit = (event) => {
+    this.setState({ isToolQuarySend: true });
     // console.log(this.state);
     fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
@@ -153,21 +196,46 @@ class SAPS extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const {
+      sequence,
+      codontable,
+      isToolResponse,
+      isToolQuarySend,
+      toolResponse,
+    } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <p>Protein sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="100"
-          />
-          {/* <div class="dropdown">
+      <Wrapper>
+        <FormCard>
+          <form
+            onSubmit={this.onSubmit}
+            ref={(form) => (this.form = form)}
+            onReset={this.handleReset}
+          >
+            <Formbody>
+              <p>
+                Clustal Omega is a new multiple sequence alignment program that
+                uses seeded guide trees and HMM profile-profile techniques to
+                generate alignments between three or more sequences.
+              </p>
+              <p></p>
+              <p>
+                Important note: This tool can align up to 4000 sequences or a
+                maximum file size of 4 MB.
+              </p>
+              <p></p>
+              <p>Protein sequence in any supported format:</p>
+
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="62"
+              />
+
+              {/* <div class="dropdown">
             <button
               class="btn btn-large btn-secondary dropdown-toggle"
               type="button"
@@ -184,51 +252,76 @@ class SAPS extends Component {
               })}
             </div>
           </div> */}
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
-              <div class="dropdown">
-                <button
-                  class="btn btn-large btn-secondary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  {key}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
+              <Grid container spacing={2}>
+                {Object.keys(INITIAL_STATE).map((key, index) => {
+                  return (
+                    <Grid item xs={6} md={4}>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-large btn-secondary dropdown-toggle button-width"
+                          type="button"
+                          style={QueryStyle}
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {Memory[index]}
+                        </button>
+                        <div
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <ul>
+                            {INITIAL_STATE[key].map((value) => {
+                              //   console.log(value);
+                              return (
+                                <li onClick={this._onClick} name={key}>
+                                  {value}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      </div>
+                    </Grid>
+                  );
+                  // INITIAL_STATE[key].map((_, idx) => {});
+                })}
+              </Grid>
+            </Formbody>
+            <SubmitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
+          </form>
+        </FormCard>
+        <Outform>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}>
+                {toolResponse.map((line) => {
+                  return (
+                    <p style={{ fontSize: "12px", whiteSpace: "break-spaces" }}>
+                      {line.props.children}
+                    </p>
+                  );
+                })}
               </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
-          <button disabled={isInvalid} type="submit">
-            Submit
-          </button>
-        </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
-      </div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
+          ) : (
+            <div></div>
+          )}
+        </Outform>
+      </Wrapper>
     );
   }
 }

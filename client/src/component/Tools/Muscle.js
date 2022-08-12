@@ -1,13 +1,24 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
+import Grid from "@mui/material/Grid";
 import NewlineText from "../NewlineText";
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Outform,
+  SubmitButtonAlign,
+  PuffFit,
+} from "./styles";
 
 var INITIAL_STATE = {
   stype: ["protein", "dna"],
   format: ["fasta", "clw", "clwstrict", "html", "msf", "phyi", "phys"],
   tree: ["none", "tree1", "tree2"],
 };
+
+var Memory = ["stype", "format", "tree"];
 
 class Kalign extends Component {
   constructor(props) {
@@ -87,7 +98,7 @@ class Kalign extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            // console.log(typeof result.Response);
+            console.log(typeof result.Response);
             NewlineText(result.Response).then((array) => {
               this.handleToolResponse(array);
             });
@@ -128,7 +139,7 @@ class Kalign extends Component {
             name="sequence"
             value={this.state.value}
             rows="6"
-            cols="100"
+            cols="62"
           />
           {/* <div class="dropdown">
             <button
@@ -147,35 +158,42 @@ class Kalign extends Component {
               })}
             </div>
           </div> */}
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
-              <div class="dropdown">
-                <button
-                  class="btn btn-large btn-secondary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  {key}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
+          <Grid container spacing={2}>
+            {Object.keys(INITIAL_STATE).map((key, index) => {
+              return (
+                <Grid container spacing={2}>
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-large btn-secondary dropdown-toggle"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      {key}
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <ul>
+                        {INITIAL_STATE[key].map((value) => {
+                          //   console.log(value);
+                          return (
+                            <li onClick={this._onClick} name={key}>
+                              {value}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                </Grid>
+              );
+              // INITIAL_STATE[key].map((_, idx) => {});
+            })}
+          </Grid>
           <button disabled={isInvalid} type="submit">
             Submit
           </button>
