@@ -51,7 +51,7 @@ const SubmitButtonAlign = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 20px;
-  left: 11.5yrem;
+  left: 11.5rem;
 `;
 
 const PuffFit = styled.div`
