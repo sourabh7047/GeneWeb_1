@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 const Formbody = styled.div`
-  position: relative;
   margin: 20px;
   width: 95%;
+  overflow-y: auto;
+  height: 35rem;
 `;
 
 const QueryStyle = {
@@ -15,18 +16,16 @@ const QueryStyle = {
 const CodonQuery = {
   ...QueryStyle,
   width: "37rem",
-  marginTop: "40px"
+  marginTop: "40px",
 };
 
 const FormCard = styled.div`
-  position: relative;
   margin: 50px;
   height: 700px;
   width: 700px;
   border-radius: 10px;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-  overflow-y: scroll;
 `;
 
 const Wrapper = styled.div`
@@ -49,9 +48,9 @@ const Outform = styled.div`
 const SubmitButtonAlign = styled.div`
   display: flex;
   justify-content: center;
-  position: absolute;
-  bottom: 20px;
-  left: 11.5rem;
+  // position: absolute;
+  // bottom: 20px;
+  // left: 11.5rem;
 `;
 
 const PuffFit = styled.div`
@@ -59,6 +58,19 @@ const PuffFit = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+`;
+
+const Modli = styled.li`
+  text-align: center;
+  list-style: none;
+  margin-left: -2em;
+  &:hover {
+    background: #808080;
+  }
+`;
+
+const Modul = styled.ul`
+  list-style-position: inside;
 `;
 
 export {
@@ -70,4 +82,6 @@ export {
   SubmitButtonAlign,
   PuffFit,
   CodonQuery,
+  Modli,
+  Modul,
 };

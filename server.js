@@ -16,7 +16,7 @@ const app = express();
 // ----------------------------middleware
 
 app.use(cors());
-app.use(express.json({ extended: false }));
+app.use(express.json({ extended: false, limit: "50mb" }));
 
 const PORT = process.env.PORT || 5000;
 
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 
   // Handle react routing, return all request to react app
-  app.use("*", function(req, res){
+  app.use("*", function (req, res) {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }

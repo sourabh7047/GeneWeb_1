@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import * as ROUTES from "../../routes";
 import WebContext from "./context";
 import { withRouter } from "react-router-dom";
+import styled from "styled-components";
 
 const ToolList = [
   "emboss_Backtranseq",
@@ -42,15 +43,15 @@ class ToolsMenu extends Component {
             onClose={() => this.props.handleClose(null)}
           >
             <MenuItem>
-              <ul>
+              <Modul>
                 {ToolList.map((_tool, idx) => {
                   return (
-                    <li onClick={(e) => this.toolRedirect(e, webFile)}>
+                    <Modli onClick={(e) => this.toolRedirect(e, webFile)}>
                       {_tool}
-                    </li>
+                    </Modli>
                   );
                 })}
-              </ul>
+              </Modul>
             </MenuItem>
           </Menu>
         )}
@@ -60,3 +61,16 @@ class ToolsMenu extends Component {
 }
 // onClick={this.props.handleClose}
 export default withRouter(ToolsMenu);
+
+const Modli = styled.li`
+  text-align: center;
+  list-style: none;
+  margin-left: -2em;
+  &:hover {
+    background: #756dd4;
+  }
+`;
+
+const Modul = styled.ul`
+  list-style-position: inside;
+`;

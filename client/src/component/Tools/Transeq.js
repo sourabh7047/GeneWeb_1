@@ -11,6 +11,8 @@ import {
   FormCard,
   Wrapper,
   Outform,
+  Modli,
+  Modul,
   SubmitButtonAlign,
   CodonQuery,
   PuffFit,
@@ -215,21 +217,21 @@ class Sixpack extends Component {
                           class="dropdown-menu"
                           aria-labelledby="dropdownMenuButton"
                         >
-                          <ul>
+                          <Modul>
                             {INITIAL_STATE[key].map((value) => {
                               //   console.log(value);
                               return (
-                                <li
+                                <Modli
                                   onClick={(event) =>
                                     this._onClick(event, index)
                                   }
                                   name={key}
                                 >
                                   {value}
-                                </li>
+                                </Modli>
                               );
                             })}
-                          </ul>
+                          </Modul>
                         </div>
                       </div>
                     </Grid>

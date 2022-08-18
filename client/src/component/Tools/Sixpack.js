@@ -8,9 +8,12 @@ import { ReactComponent as Puff } from "../../Assets/puff.svg";
 import {
   Formbody,
   QueryStyle,
+  CodonQuery,
   FormCard,
   Wrapper,
   Outform,
+  Modli,
+  Modul,
   SubmitButtonAlign,
   PuffFit,
 } from "./styles";
@@ -73,9 +76,8 @@ class Sixpack extends Component {
     }
   };
 
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -178,7 +180,7 @@ class Sixpack extends Component {
               <div class="dropdown">
                 <button
                   class="btn btn-large btn-secondary dropdown-toggle"
-                  style={QueryStyle}
+                  style={CodonQuery}
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
@@ -215,16 +217,21 @@ class Sixpack extends Component {
                           class="dropdown-menu"
                           aria-labelledby="dropdownMenuButton"
                         >
-                          <ul>
+                          <Modul>
                             {INITIAL_STATE[key].map((value) => {
                               //   console.log(value);
                               return (
-                                <li onClick={this._onClick} name={key}>
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
                                   {value}
-                                </li>
+                                </Modli>
                               );
                             })}
-                          </ul>
+                          </Modul>
                         </div>
                       </div>
                     </Grid>

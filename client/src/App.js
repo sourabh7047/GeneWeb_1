@@ -35,7 +35,7 @@ const App = () => {
             <SecondPage key={window.location.pathname}></SecondPage>
           )}
         />
-        <PrivateRoute path="/tools/:tools" component={ToolRedirect} />
+        <Route path="/tools/:tools" component={ToolRedirect} />
         <Route path={ROUTES.SIGN_UP} component={SignUpPage} exact />
       </Switch>
     </div>

@@ -11,6 +11,8 @@ import {
   FormCard,
   Wrapper,
   Outform,
+  Modli,
+  Modul,
   SubmitButtonAlign,
   PuffFit,
 } from "./styles";
@@ -41,37 +43,12 @@ class Pepstats extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   this.parameterDetail();
-  // }
-
-  // parameterDetail = () => {
-  //   // eslint-disable-next-line no-unused-expressions
-  //   console.log(this.state.toolname);
-  //   fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
-  //     .then(function (Response) {
-  //       return Response.json();
-  //     })
-  //     .then((Array) => {
-  //       this.setState({ codontable: Array });
-  //     });
-  // };
-
   _onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  // _onClickCodon = (e) => {
-  //   for (let obj of this.state.codontable) {
-  //     if (obj.label[0] === e.currentTarget.innerText) {
-  //       this.setState({ codon: obj.value[0] });
-  //     }
-  //   }
-  // };
-
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -174,23 +151,7 @@ class Pepstats extends Component {
                 rows="6"
                 cols="62"
               />
-              {/* <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p>{value.label[0]}</p>;
-              })}
-            </div>
-          </div> */}
+
               <Grid container spacing={2}>
                 {Object.keys(INITIAL_STATE).map((key, index) => {
                   return (
@@ -211,16 +172,21 @@ class Pepstats extends Component {
                           class="dropdown-menu"
                           aria-labelledby="dropdownMenuButton"
                         >
-                          <ul>
+                          <Modul>
                             {INITIAL_STATE[key].map((value) => {
                               //   console.log(value);
                               return (
-                                <li onClick={this._onClick} name={key}>
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
                                   {value}
-                                </li>
+                                </Modli>
                               );
                             })}
-                          </ul>
+                          </Modul>
                         </div>
                       </div>
                     </Grid>

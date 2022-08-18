@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NewlineText from "../NewlineText";
 // import "./style.css";
+import Grid from "@mui/material/Grid";
 import Submit from "../../commons/SubmitButton";
 import { userEmail } from "../Firebase/firebase";
 import { ReactComponent as Puff } from "../../Assets/puff.svg";
@@ -18,7 +19,7 @@ class Backtranseq extends Component {
   constructor(props) {
     super(props);
     if (props) {
-      console.log("locationFIle", this.props.locationFile)
+      console.log("locationFIle", this.props.locationFile);
       // console.log(props);
       // console.log("First", userEmail);
     }
@@ -154,7 +155,7 @@ class Backtranseq extends Component {
               />
               <div className="dropdown">
                 <button
-                  class="btn btn-large btn-primary dropdown-toggle "
+                  className="btn btn-large btn-primary dropdown-toggle "
                   style={CodonQuery}
                   type="button"
                   id="dropdownMenuButton"
@@ -175,15 +176,15 @@ class Backtranseq extends Component {
                   })}
                 </div>
               </div>
-              <SubmitButtonAlign>
-                <Submit type="submit" disabled={isInvalid}>
-                  Submit
-                </Submit>
-                <Submit type="reset" onClick={this.handleManualReset}>
-                  Reset
-                </Submit>
-              </SubmitButtonAlign>
             </Formbody>
+            <SubmitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
           </form>
         </FormCard>
         <Outform>

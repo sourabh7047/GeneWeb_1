@@ -1,7 +1,24 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
 import NewlineText from "../NewlineText";
+import Grid from "@mui/material/Grid";
+import { userEmail } from "../Firebase/firebase";
+import Submit from "../../commons/SubmitButton";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Outform,
+  SubmitButtonAlign,
+  Modli,
+  Modul,
+  PuffFit,
+} from "./styles";
+
+var Memory = ["stype", "format", "gapopen", "gapext", "termgap", "bonus"];
 
 var INITIAL_STATE = {
   stype: ["protein", "dna"],
@@ -18,49 +35,25 @@ class Kalign extends Component {
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
-      email: JSON.parse(localStorage.getItem("authUser")).email,
+      email: userEmail,
       Rtype: "aln-clustalw",
       // codontable: [],
       // codon: "",
       sequence: "",
       isToolResponse: false,
+      isToolQuarySend: false,
       toolResponse: [],
       // orfminsize: 1,
       ...INITIAL_STATE,
     };
   }
 
-  // componentDidMount() {
-  //   this.parameterDetail();
-  // }
-
-  // parameterDetail = () => {
-  //   // eslint-disable-next-line no-unused-expressions
-  //   console.log(this.state.toolname);
-  //   fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
-  //     .then(function (Response) {
-  //       return Response.json();
-  //     })
-  //     .then((Array) => {
-  //       this.setState({ codontable: Array });
-  //     });
-  // };
-
   _onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  // _onClickCodon = (e) => {
-  //   for (let obj of this.state.codontable) {
-  //     if (obj.label[0] === e.currentTarget.innerText) {
-  //       this.setState({ codon: obj.value[0] });
-  //     }
-  //   }
-  // };
-
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -69,6 +62,19 @@ class Kalign extends Component {
       toolResponse: data,
       isToolResponse: true,
     });
+  };
+
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+    Object.keys(INITIAL_STATE).map((key, idx) => {
+      return (Memory[idx] = key);
+    });
+  };
+
+  handleReset = () => {
+    this.setState({ isToolQuarySend: false });
   };
 
   onSubmit = (event) => {
@@ -123,83 +129,112 @@ class Kalign extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const {
+      sequence,
+      codontable,
+      isToolResponse,
+      isToolQuarySend,
+      toolResponse,
+    } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <p>Protein sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="100"
-          />
-          {/* <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p>{value.label[0]}</p>;
-              })}
-            </div>
-          </div> */}
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
-              <div class="dropdown">
-                <button
-                  class="btn btn-large btn-secondary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  {key}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
+      <Wrapper>
+        <FormCard>
+          <form
+            onSubmit={this.onSubmit}
+            ref={(form) => (this.form = form)}
+            onReset={this.handleReset}
+          >
+            <Formbody>
+              <p>A fast and accurate multiple sequence alignment algorithm.</p>
+              <p></p>
+              <p>
+                <b>Important note:</b> This tool can align up to 2000 sequences
+                or a maximum file size of 2 MB.
+              </p>
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="62"
+              />
+              <Grid container spacing={2}>
+                {Object.keys(INITIAL_STATE).map((key, index) => {
+                  return (
+                    <Grid item xs={6} md={4}>
+                      <div className="dropdown">
+                        <button
+                          className="btn btn-large btn-secondary dropdown-toggle"
+                          type="button"
+                          style={QueryStyle}
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {Memory[index]}
+                        </button>
+                        <div
+                          className="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <Modul>
+                            {INITIAL_STATE[key].map((value) => {
+                              //   console.log(value);
+                              return (
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
+                                  {value}
+                                </Modli>
+                              );
+                            })}
+                          </Modul>
+                        </div>
+                      </div>
+                    </Grid>
+                  );
+                  // INITIAL_STATE[key].map((_, idx) => {});
+                })}
+              </Grid>
+            </Formbody>
+            <SubmitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
+          </form>
+        </FormCard>
+        <Outform>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}>
+                {toolResponse.map((line) => {
+                  return (
+                    <p style={{ fontSize: "12px", whiteSpace: "break-spaces" }}>
+                      {line.props.children}
+                    </p>
+                  );
+                })}
               </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
-          <button disabled={isInvalid} type="submit">
-            Submit
-          </button>
-        </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              console.log(toolResponse);
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
-      </div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
+          ) : (
+            <div></div>
+          )}
+        </Outform>
+      </Wrapper>
     );
   }
 }

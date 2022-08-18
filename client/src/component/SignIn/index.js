@@ -7,6 +7,7 @@ import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../routes";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AlertSnackbar from "../../commons/AlertSnakbar";
 
 import {
   faGoogle,
@@ -27,7 +28,7 @@ const SignInPage = () => (
   <div>
     <Main>
       <Container>
-        <h1 style={{padding: '50px', paddingLeft: '130px'}}>SignIn</h1>
+        <h1 style={{ padding: "50px", paddingLeft: "130px" }}>SignIn</h1>
         <SignInForm />
         <Wrapper>
           <SignInGoogle />
@@ -122,15 +123,12 @@ class SignInFormBase extends Component {
   }
 }
 
-
 class SignInGoogleBase extends Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
 
-  
-  
   onSubmit = (event) => {
     const { email, password } = this.state;
 
@@ -145,14 +143,13 @@ class SignInGoogleBase extends Component {
         });
       })
       .then(() => {
-        this.setState({ email: email});
+        this.setState({ email: email });
         this.props.history.push(ROUTES.SEARCH);
       })
       .catch((error) => {
         if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
           error.message = ERROR_MSG_ACCOUNT_EXISTS;
         }
-
         this.setState({ error });
       });
 
@@ -165,8 +162,14 @@ class SignInGoogleBase extends Component {
     return (
       <form onSubmit={this.onSubmit}>
         {/* <button type="submit">Sign In with Google</button> */}
-        <MFontAwesomeIcon type="submit" icon={faGoogle} size="2x" onClick={this.onSubmit.bind(this)} />
-        {error && <p>{error.message}</p>}
+        <MFontAwesomeIcon
+          type="submit"
+          icon={faGoogle}
+          size="2x"
+          onClick={this.onSubmit.bind(this)}
+        />
+
+        {/* {error && <p>{error.message}</p> } */}
       </form>
     );
   }

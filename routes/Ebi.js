@@ -67,7 +67,6 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
         return response.json({
           Response: "Sorry, Unable To Run Your Request Now, Please Try Again",
         });
-        break;
       }
     }
 
@@ -116,8 +115,9 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
       });
     }
   } catch (err) {
-    console.log("caught error");
-    console.log(err);
+    response.json({
+      Response: "Unable to proceed with your request"
+    })
   }
 });
 

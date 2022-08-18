@@ -1,10 +1,20 @@
 import React, { Component } from "react";
 import "./style.css";
 import NewlineText from "../NewlineText";
-import styled from "styled-components";
 import { ReactComponent as Puff } from "../../Assets/puff.svg";
 import Grid from "@mui/material/Grid";
 import Submit from "../../commons/SubmitButton";
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Modli,
+  Modul,
+  Outform,
+  SubmitButtonAlign,
+  PuffFit,
+} from "./styles";
 
 var INITIAL_STATE = {
   outputtype: ["default", "documented", "terse", "verbose"],
@@ -84,9 +94,8 @@ class SAPS extends Component {
   //   }
   // };
 
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -145,13 +154,8 @@ class SAPS extends Component {
   };
 
   render() {
-    const {
-      sequence,
-      codontable,
-      isToolResponse,
-      isToolQuarySend,
-      toolResponse,
-    } = this.state;
+    const { sequence, codontable, isToolResponse, isToolQuarySend } =
+      this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
@@ -176,30 +180,14 @@ class SAPS extends Component {
                 rows="6"
                 cols="62"
               />
-              {/* <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p>{value.label[0]}</p>;
-              })}
-            </div>
-          </div> */}
+
               <Grid container spacing={2}>
                 {Object.keys(INITIAL_STATE).map((key, index) => {
                   return (
                     <Grid item xs={6} md={4}>
-                      <div class="dropdown">
+                      <div className="dropdown">
                         <button
-                          class="btn btn-large btn-secondary dropdown-toggle"
+                          className="btn btn-large btn-secondary dropdown-toggle"
                           type="button"
                           style={QueryStyle}
                           id="dropdownMenuButton"
@@ -210,19 +198,24 @@ class SAPS extends Component {
                           {Memory[index]}
                         </button>
                         <div
-                          class="dropdown-menu"
+                          className="dropdown-menu"
                           aria-labelledby="dropdownMenuButton"
                         >
-                          <ul>
+                          <Modul>
                             {INITIAL_STATE[key].map((value) => {
                               //   console.log(value);
                               return (
-                                <li onClick={this._onClick} name={key}>
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
                                   {value}
-                                </li>
+                                </Modli>
                               );
                             })}
-                          </ul>
+                          </Modul>
                         </div>
                       </div>
                     </Grid>
@@ -260,51 +253,3 @@ class SAPS extends Component {
 }
 
 export default SAPS;
-
-const FormCard = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  overflow-y: scroll;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-`;
-
-const Formbody = styled.div`
-  margin: 20px;
-`;
-
-const QueryStyle = {
-  margin: "10px 0",
-  backgroundColor: "#567FC3",
-};
-
-const Outform = styled.div`
-  margin: 50px;
-  padding: 1.2rem;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-  overflow-y: scroll;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const SubmitButtonAlign = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const PuffFit = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
