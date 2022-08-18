@@ -1,24 +1,39 @@
 import React, { Component } from "react";
 import NewlineText from "../NewlineText";
-import styled from "styled-components";
-import "./style.css";
+// import "./style.css";
+import Grid from "@mui/material/Grid";
 import Submit from "../../commons/SubmitButton";
+import { userEmail } from "../Firebase/firebase";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import {
+  Formbody,
+  CodonQuery,
+  FormCard,
+  Wrapper,
+  Outform,
+  SubmitButtonAlign,
+  PuffFit,
+} from "./styles";
 
 class Backtranseq extends Component {
   constructor(props) {
     super(props);
     if (props) {
-      console.log(props);
+      console.log("locationFIle", this.props.locationFile);
+      // console.log(props);
+      // console.log("First", userEmail);
     }
     this.state = {
-      email: JSON.parse(localStorage.getItem("authUser")).email,
+      email: userEmail,
       Rtype: "out",
-
       toolname: this.props.locationFile.toolName.toLowerCase(),
       table: [],
       isToolResponse: false,
       toolResponse: [],
-      ...INITIAL_STATE,
+      sequence: "",
+      codontable: "Codon Table",
+      codon: "codon",
+      isToolQuarySend: false,
     };
   }
 
@@ -32,8 +47,8 @@ class Backtranseq extends Component {
       .then(function (Response) {
         return Response.json();
       })
-      .then((codontable) => {
-        let ct = codontable;
+      .then((codon) => {
+        let ct = codon;
         console.log(ct);
         this.setState({ table: ct });
       });
@@ -44,6 +59,7 @@ class Backtranseq extends Component {
   };
 
   _onClick = (e) => {
+    this.setState({ codon: e.currentTarget.innerText });
     for (let obj of this.state.table) {
       if (obj.label[0] === e.currentTarget.innerText) {
         this.setState({ codontable: obj.value[0] });
@@ -58,7 +74,20 @@ class Backtranseq extends Component {
     });
   };
 
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+  };
+
+  handleReset = () => {
+    this.setState({ codon: "codon" });
+    this.setState({ isToolQuarySend: false });
+  };
+
   onSubmit = (event) => {
+    this.setState({ isToolQuarySend: true });
+
     fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
@@ -91,63 +120,92 @@ class Backtranseq extends Component {
   };
 
   render() {
-    const { table, sequence, codontable, isToolResponse, toolResponse } =
-      this.state;
+    const {
+      table,
+      sequence,
+      codontable,
+      isToolResponse,
+      toolResponse,
+      isToolQuarySend,
+      codon,
+    } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
       <Wrapper>
         <FormCard>
-          <form onSubmit={this.onSubmit}>
+          <form
+            onSubmit={this.onSubmit}
+            ref={(form) => (this.form = form)}
+            onReset={this.handleReset}
+          >
             <Formbody>
-            <p>EMBOSS Backtranseq reads a protein sequence and writes the nucleic acid sequence it is most likely to have come from.</p>
-            <p></p>
+              <p>
+                EMBOSS Backtranseq reads a protein sequence and writes the
+                nucleic acid sequence it is most likely to have come from.
+              </p>
+              <p></p>
               <p>Protein sequence in any supported format:</p>
               <textarea
                 onChange={this._onChange}
                 name="sequence"
                 value={this.state.value}
                 rows="6"
-                cols="55"
+                cols="62"
               />
-              <div class="dropdown">
+              <div className="dropdown">
                 <button
-                  class="btn btn-large btn-secondary dropdown-toggle"
-                  style={QueryStyle}
+                  className="btn btn-large btn-primary dropdown-toggle "
+                  style={CodonQuery}
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  name="codontable"
+                  value={codon}
                 >
-                  Dropdown button
+                  {codon}
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                >
                   {table.map((obj) => {
                     return <p onClick={this._onClick}>{obj.label[0]}</p>;
                   })}
                 </div>
               </div>
             </Formbody>
-            <submitButtonAlign>
+            <SubmitButtonAlign>
               <Submit type="submit" disabled={isInvalid}>
                 Submit
               </Submit>
-            </submitButtonAlign>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
           </form>
         </FormCard>
         <Outform>
-          {isToolResponse ? (
-            <div style={{padding: '5px', margin: '10px',}}>
-              {toolResponse.map((line) => {
-                console.log(toolResponse);
-                return <p>{line}</p>;
-              })}
-            </div>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}>
+                {toolResponse.map((line) => {
+                  return (
+                    <p style={{ fontSize: "12px", whiteSpace: "break-spaces" }}>
+                      {line.props.children}
+                    </p>
+                  );
+                })}
+              </div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
           ) : (
-            <div>
-              <h4>nothing to show</h4>
-            </div>
+            <div></div>
           )}
         </Outform>
       </Wrapper>
@@ -156,41 +214,3 @@ class Backtranseq extends Component {
 }
 
 export default Backtranseq;
-
-const INITIAL_STATE = {
-  sequence: "",
-  codontable: "",
-};
-
-const Formbody = styled.div`
-  margin: 20px;
-`;
-
-const QueryStyle = {
-  margin: "10px 0",
-};
-
-const FormCard = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Outform = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-  overflow: scroll;
-`;

@@ -1,10 +1,21 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
 import Submit from "../../commons/SubmitButton";
 import NewlineText from "../NewlineText";
-import styled from "styled-components";
-
+import Grid from "@mui/material/Grid";
+import { userEmail } from "../Firebase/firebase";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Outform,
+  SubmitButtonAlign,
+  Modli,
+  Modul,
+  PuffFit,
+} from "./styles";
 
 var INITIAL_STATE = {
   window: ["100"],
@@ -13,13 +24,15 @@ var INITIAL_STATE = {
   minpc: ["50"],
 };
 
+var Memory = ["window", "minlen", "minoe", "minpc"];
+
 class Cpgplot extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
-      email: JSON.parse(localStorage.getItem("authUser")).email,
+      email: userEmail,
       table: [],
       Rtype: "out",
       isToolResponse: false,
@@ -32,37 +45,12 @@ class Cpgplot extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   this.parameterDetail();
-  // }
-
-  // parameterDetail = () => {
-  //   // eslint-disable-next-line no-unused-expressions
-  //   console.log(this.state.toolname);
-  //   fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
-  //     .then(function (Response) {
-  //       return Response.json();
-  //     })
-  //     .then((Array) => {
-  //       this.setState({ codontable: Array });
-  //     });
-  // };
-
   _onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  // _onClickCodon = (e) => {
-  //   for (let obj of this.state.codontable) {
-  //     if (obj.label[0] === e.currentTarget.innerText) {
-  //       this.setState({ codon: obj.value[0] });
-  //     }
-  //   }
-  // };
-
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -73,7 +61,21 @@ class Cpgplot extends Component {
     });
   };
 
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+    Object.keys(INITIAL_STATE).map((key, idx) => {
+      return (Memory[idx] = key);
+    });
+  };
+
+  handleReset = () => {
+    this.setState({ isToolQuarySend: false });
+  };
+
   onSubmit = (event) => {
+    this.setState({ isToolQuarySend: true });
     console.log(this.state);
     fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
@@ -93,7 +95,7 @@ class Cpgplot extends Component {
       .then((res) => {
         if (res.status === 200) {
           res.json().then((result) => {
-            // console.log(result.Response);
+            console.log(result.Response);
             //convert to base64
             // var b64Response = btoa(
             //   unescape(encodeURIComponent(result.Response))
@@ -122,89 +124,107 @@ class Cpgplot extends Component {
   };
 
   render() {
-    const { sequence, codontable,isToolResponse, toolResponse} = this.state;
+    const {
+      sequence,
+      codontable,
+      isToolResponse,
+      isToolQuarySend,
+      toolResponse,
+    } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
       <Wrapper>
         <FormCard>
-        <form onSubmit={this.onSubmit}>
-        <Formbody>
-          <p>Nuclic Acid sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="55"
-          />
-          {/* <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p>{value.label[0]}</p>;
-              })}
-            </div>
-          </div> */}
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
-              <div class="dropdown">
-                <button
-                  class="btn btn-large btn-secondary dropdown-toggle"
-                  style={QueryStyle}
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  {key}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
+          <form
+            onSubmit={this.onSubmit}
+            ref={(form) => (this.form = form)}
+            onReset={this.handleReset}
+          >
+            <Formbody>
+              <p>Identify CpG islands in nucleotide sequence(s)</p>
+              <p></p>
+              <p>Nuclic Acid sequence in any supported format:</p>
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="62"
+              />
+
+              <Grid container spacing={2}>
+                {Object.keys(INITIAL_STATE).map((key, index) => {
+                  return (
+                    <Grid item xs={6} md={4}>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-large btn-secondary dropdown-toggle"
+                          style={QueryStyle}
+                          type="button"
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {Memory[index]}
+                        </button>
+                        <div
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <Modul>
+                            {INITIAL_STATE[key].map((value) => {
+                              //   console.log(value);
+                              return (
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
+                                  {value}
+                                </Modli>
+                              );
+                            })}
+                          </Modul>
+                        </div>
+                      </div>
+                    </Grid>
+                  );
+                  // INITIAL_STATE[key].map((_, idx) => {});
+                })}
+              </Grid>
             </Formbody>
-               <submitButtonAlign>
+            <SubmitButtonAlign>
               <Submit type="submit" disabled={isInvalid}>
                 Submit
               </Submit>
-            </submitButtonAlign>
-        </form>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
+          </form>
         </FormCard>
         <Outform>
-          {isToolResponse ? (
-            <div style={{padding: '5px', margin: '10px',}}>
-              {toolResponse.map((line) => {
-                console.log(toolResponse);
-                return <p>{line}</p>;
-              })}
-            </div>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}>
+                {toolResponse.map((line) => {
+                  return (
+                    <p style={{ fontSize: "12px", whiteSpace: "break-spaces" }}>
+                      {line.props.children}
+                    </p>
+                  );
+                })}
+              </div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
           ) : (
-            <div>
-              <h4>nothing to show</h4>
-            </div>
+            <div></div>
           )}
         </Outform>
       </Wrapper>
@@ -213,37 +233,3 @@ class Cpgplot extends Component {
 }
 
 export default Cpgplot;
-
-const Formbody = styled.div`
-  margin: 20px;
-`;
-
-const QueryStyle = {
-  margin: "10px 0",
-};
-
-const FormCard = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Outform = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-  overflow: scroll;
-`;
-

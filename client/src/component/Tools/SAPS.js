@@ -1,7 +1,20 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
 import NewlineText from "../NewlineText";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import Grid from "@mui/material/Grid";
+import Submit from "../../commons/SubmitButton";
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Modli,
+  Modul,
+  Outform,
+  SubmitButtonAlign,
+  PuffFit,
+} from "./styles";
 
 var INITIAL_STATE = {
   outputtype: ["default", "documented", "terse", "verbose"],
@@ -20,18 +33,20 @@ var INITIAL_STATE = {
   positiveresidues: ["lys-arg", "lys-arg-his"],
 };
 
+var Memory = ["outputtype", "species", "positiveresidues"];
+
 class SAPS extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
-      Rtype: "out",
       email: JSON.parse(localStorage.getItem("authUser")).email,
       // codontable: [],
       // codon: "",
       sequence: "",
       isToolResponse: false,
+      isToolQuarySend: false,
       toolResponse: [],
       // orfminsize: 1,
       ...INITIAL_STATE,
@@ -58,6 +73,19 @@ class SAPS extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+    Object.keys(INITIAL_STATE).map((key, idx) => {
+      return (Memory[idx] = key);
+    });
+  };
+
+  handleReset = () => {
+    this.setState({ isToolQuarySend: false });
+  };
+
   // _onClickCodon = (e) => {
   //   for (let obj of this.state.codontable) {
   //     if (obj.label[0] === e.currentTarget.innerText) {
@@ -66,9 +94,8 @@ class SAPS extends Component {
   //   }
   // };
 
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -80,7 +107,7 @@ class SAPS extends Component {
   };
 
   onSubmit = (event) => {
-    console.log(this.state);
+    this.setState({ isToolQuarySend: true });
     fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
@@ -127,83 +154,100 @@ class SAPS extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const { sequence, codontable, isToolResponse, isToolQuarySend } =
+      this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <p>Protein sequence in any supported format:</p>
-          <textarea
-            onChange={this._onChange}
-            name="sequence"
-            value={this.state.value}
-            rows="6"
-            cols="100"
-          />
-          {/* <div class="dropdown">
-            <button
-              class="btn btn-large btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown button
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {codontable.map((value, idx) => {
-                return <p>{value.label[0]}</p>;
-              })}
-            </div>
-          </div> */}
-          {Object.keys(INITIAL_STATE).map((key, index) => {
-            return (
-              <div class="dropdown">
-                <button
-                  class="btn btn-large btn-secondary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  {key}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <ul>
-                    {INITIAL_STATE[key].map((value) => {
-                      //   console.log(value);
-                      return (
-                        <li onClick={this._onClick} name={key}>
-                          {value}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            );
-            // INITIAL_STATE[key].map((_, idx) => {});
-          })}
-          <button disabled={isInvalid} type="submit">
-            Submit
-          </button>
-        </form>
-        {isToolResponse ? (
-          <div>
-            {toolResponse.map((line) => {
-              console.log(toolResponse);
-              return <h6>{line}</h6>;
-            })}
-          </div>
-        ) : (
-          <div>
-            <h4>nothing to show</h4>
-          </div>
-        )}
-      </div>
+      <Wrapper>
+        <FormCard>
+          <form onSubmit={this.onSubmit}>
+            <Formbody>
+              <p>
+                SAPS evaluates a wide variety of protein sequence properties
+                using statistics. Properties considered include compositional
+                biases, clusters and runs of charge and other amino acid types,
+                different kinds and extents of repetitive structures, locally
+                periodic motifs, and anomalous spacings between identical
+                residue types.
+              </p>
+              <p></p>
+              <p>Protein sequence in any supported format:</p>
+              <textarea
+                onChange={this._onChange}
+                name="sequence"
+                value={this.state.value}
+                rows="6"
+                cols="62"
+              />
+
+              <Grid container spacing={2}>
+                {Object.keys(INITIAL_STATE).map((key, index) => {
+                  return (
+                    <Grid item xs={6} md={4}>
+                      <div className="dropdown">
+                        <button
+                          className="btn btn-large btn-secondary dropdown-toggle"
+                          type="button"
+                          style={QueryStyle}
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {Memory[index]}
+                        </button>
+                        <div
+                          className="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <Modul>
+                            {INITIAL_STATE[key].map((value) => {
+                              //   console.log(value);
+                              return (
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
+                                  {value}
+                                </Modli>
+                              );
+                            })}
+                          </Modul>
+                        </div>
+                      </div>
+                    </Grid>
+                  );
+                  // INITIAL_STATE[key].map((_, idx) => {});
+                })}
+              </Grid>
+            </Formbody>
+            <SubmitButtonAlign>
+              <Submit type="submit" disabled={isInvalid}>
+                Submit
+              </Submit>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
+          </form>
+        </FormCard>
+        <Outform>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}></div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
+          ) : (
+            <div></div>
+          )}
+        </Outform>
+      </Wrapper>
     );
   }
 }

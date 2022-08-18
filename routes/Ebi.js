@@ -6,7 +6,7 @@ const parseString = xml2js.parseString;
 const fetch = require("node-fetch");
 const JobStatus = require("./Functions/JobStatus.js");
 const OutSeq = require("./Functions/OutSeq.js");
-const querystring = require("querystring")
+const querystring = require("querystring");
 
 const EBIBase = "https://www.ebi.ac.uk/Tools/services/rest";
 
@@ -34,9 +34,10 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
   try {
     const toolName = request.params.toolname;
     console.log(toolName);
-    console.log(request.body)
+    console.log(request.body);
+    const out = request.params.Rtype;
 
-    var SequenceData = new URLSearchParams(request.body)
+    var SequenceData = new URLSearchParams(request.body);
 
     var JobId = "";
 
@@ -54,7 +55,8 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
         }
       );
 
-      console.log(res.status, 'val')
+      console.log(res.status, "val");
+      console.log(res)
       if (res.status >= 200 && res.status <= 299) {
         const textRes = await res.text();
         JobId = textRes;
@@ -65,21 +67,20 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
         return response.json({
           Response: "Sorry, Unable To Run Your Request Now, Please Try Again",
         });
-        break;
       }
     }
 
     if (JobId.endsWith("-p2m")) {
       const StatusResult = await JobStatus(JobId, toolName)
-      .then((Status) => {
+        .then((Status) => {
           console.log("Status :", Status);
           if (Status === "FINISHED") {
             // console.log("got result");
             // const Sequence = OutSeq(JobId, toolName, "aln-clustal_num")  //clutal omega
             // const Sequence = OutSeq(JobId, toolName, "aln-clustalw")   kalign
             // const Sequence = OutSeq(JobId, toolName, "aln-fasta")      muscle
-            console.log(toolName)
-            const Sequence = OutSeq(JobId, toolName, 'out') //out
+           
+            const Sequence = OutSeq(JobId, toolName, out) //out
               .then((res) => {
                 console.log("res", res);
                 return response.json({ Response: res });
@@ -114,8 +115,9 @@ router.post(`/:toolname/Rtype/:Rtype/run`, async (request, response) => {
       });
     }
   } catch (err) {
-    console.log("caught error");
-    console.log(err);
+    response.json({
+      Response: "Unable to proceed with your request"
+    })
   }
 });
 

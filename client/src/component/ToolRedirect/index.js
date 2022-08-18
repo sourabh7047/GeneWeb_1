@@ -15,15 +15,13 @@ import Tcoffee from "../Tools/Tcoffee";
 class ToolRedirect extends Component {
   constructor(props) {
     super(props);
-
+    console.log("ToolRedirect", this.props.location.state)
     this.state = {
       location: this.props.location,
     };
   }
 
   renderSwitch(location) {
-    console.log(location.state);
-    console.log(location.state);
     // eslint-disable-next-line default-case
     switch (location.state.toolName) {
       case "emboss_Backtranseq":

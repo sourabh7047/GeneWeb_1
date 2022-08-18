@@ -30,7 +30,7 @@ export default function Header(props) {
     if (event) {
       var str = event.target.textContent;
       var modifiedStr = str.toLowerCase().replace(/ /g, "_");
-      history.push("/tools/backtranseq");
+      // history.push("/tools/backtranseq");
       // `/webenv/${props.dataConstruct.webEnv}/tools/${modifiedStr}`
     }
   }

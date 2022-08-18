@@ -1,8 +1,22 @@
 import React, { Component } from "react";
 import "./style.css";
-import styled from "styled-components";
 import NewlineText from "../NewlineText";
 import Submit from "../../commons/SubmitButton";
+import { userEmail } from "../Firebase/firebase";
+import Grid from "@mui/material/Grid";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import {
+  Formbody,
+  QueryStyle,
+  CodonQuery,
+  FormCard,
+  Wrapper,
+  Outform,
+  Modli,
+  Modul,
+  SubmitButtonAlign,
+  PuffFit,
+} from "./styles";
 
 // https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
@@ -11,20 +25,25 @@ var INITIAL_STATE = {
   reverse: ["true", "false"],
 };
 
+var Memory = ["firstorf", "lastorf", "reverse"];
+
 class Sixpack extends Component {
   constructor(props) {
     super(props);
-
+    console.log("SUCCESS1 ", userEmail);
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
       Rtype: "out",
-      email: JSON.parse(localStorage.getItem("authUser")).email,
+      // email: JSON.parse(localStorage.getItem("authUser")).email,
+      email: userEmail,
       codontable: [],
       codon: "",
+      codonVal: "Codon",
       sequence: "",
       orfminsize: 1,
       isToolResponse: false,
       toolResponse: [],
+      isToolQuarySend: false,
       ...INITIAL_STATE,
     };
   }
@@ -49,6 +68,7 @@ class Sixpack extends Component {
   };
 
   _onClickCodon = (e) => {
+    this.setState({ codonVal: e.currentTarget.innerText });
     for (let obj of this.state.codontable) {
       if (obj.label[0] === e.currentTarget.innerText) {
         this.setState({ codon: obj.value[0] });
@@ -56,9 +76,8 @@ class Sixpack extends Component {
     }
   };
 
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -69,8 +88,24 @@ class Sixpack extends Component {
     });
   };
 
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+    Object.keys(INITIAL_STATE).map((key, idx) => {
+      return (Memory[idx] = key);
+    });
+  };
+
+  handleReset = () => {
+    this.setState({ codonVal: "codon" });
+    this.setState({ isToolQuarySend: false });
+  };
+
   onSubmit = (event) => {
     console.log(this.state);
+    this.setState({ isToolQuarySend: true });
+
     fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
@@ -110,15 +145,29 @@ class Sixpack extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const {
+      sequence,
+      codontable,
+      isToolResponse,
+      isToolQuarySend,
+      toolResponse,
+      codonVal,
+    } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
       <Wrapper>
         <FormCard>
-          <form onSubmit={this.onSubmit}>
+          <form
+            onSubmit={this.onSubmit}
+            ref={(form) => (this.form = form)}
+            onReset={this.handleReset}
+          >
             <Formbody>
-              <p>Sixpack reads a DNA sequence and outputs the three forward and (optionally) three reverse translations in a visual manner.</p>
+              <p>
+                Sixpack reads a DNA sequence and outputs the three forward and
+                (optionally) three reverse translations in a visual manner.
+              </p>
               <p></p>
               <p>Nuclic Acid sequence in any supported format:</p>
               <textarea
@@ -126,19 +175,21 @@ class Sixpack extends Component {
                 name="sequence"
                 value={this.state.value}
                 rows="6"
-                cols="55"
+                cols="62"
               />
               <div class="dropdown">
                 <button
                   class="btn btn-large btn-secondary dropdown-toggle"
-                  style={QueryStyle}
+                  style={CodonQuery}
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  name="codon"
+                  value={codonVal}
                 >
-                  Dropdown button
+                  {codonVal}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   {codontable.map((value, idx) => {
@@ -146,59 +197,78 @@ class Sixpack extends Component {
                   })}
                 </div>
               </div>
-              {Object.keys(INITIAL_STATE).map((key, index) => {
-                return (
-                  <div class="dropdown">
-                    <button
-                      class="btn btn-large btn-secondary dropdown-toggle"
-                      style={QueryStyle}
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      {key}
-                    </button>
-                    <div
-                      class="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton"
-                    >
-                      <ul>
-                        {INITIAL_STATE[key].map((value) => {
-                          //   console.log(value);
-                          return (
-                            <li onClick={this._onClick} name={key}>
-                              {value}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </div>
-                );
-                // INITIAL_STATE[key].map((_, idx) => {});
-              })}
+              <Grid container spacing={2}>
+                {Object.keys(INITIAL_STATE).map((key, index) => {
+                  return (
+                    <Grid item xs={6} md={4}>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-large btn-secondary dropdown-toggle"
+                          style={QueryStyle}
+                          type="button"
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {Memory[index]}
+                        </button>
+                        <div
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <Modul>
+                            {INITIAL_STATE[key].map((value) => {
+                              //   console.log(value);
+                              return (
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
+                                  {value}
+                                </Modli>
+                              );
+                            })}
+                          </Modul>
+                        </div>
+                      </div>
+                    </Grid>
+                  );
+                  // INITIAL_STATE[key].map((_, idx) => {});
+                })}
+              </Grid>
             </Formbody>
-            <submitButtonAlign>
+            <SubmitButtonAlign>
               <Submit type="submit" disabled={isInvalid}>
                 Submit
               </Submit>
-            </submitButtonAlign>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
           </form>
         </FormCard>
         <Outform>
-          {isToolResponse ? (
-            <div style={{padding: '10px', margin: '10px'}}>
-              {toolResponse.map((line) => {
-                console.log(toolResponse);
-                return line;
-              })}
-            </div>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}>
+                {toolResponse.map((line) => {
+                  return (
+                    <p style={{ fontSize: "12px", whiteSpace: "break-spaces" }}>
+                      {line.props.children}
+                    </p>
+                  );
+                })}
+              </div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
           ) : (
-            <div>
-              <h4>nothing to show</h4>
-            </div>
+            <div></div>
           )}
         </Outform>
       </Wrapper>
@@ -207,37 +277,3 @@ class Sixpack extends Component {
 }
 
 export default Sixpack;
-
-const FormCard = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-`;
-
-const Formbody = styled.div`
-  margin: 20px;
-`;
-
-const QueryStyle = {
-  margin: "10px 0",
-};
-
-const Outform = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-  overflow: scroll;
-
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;

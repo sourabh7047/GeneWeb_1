@@ -1,9 +1,22 @@
 import React, { Component } from "react";
 import "./style.css";
-import { AuthUserContext } from "../Session";
 import NewlineText from "../NewlineText";
-import styled from "styled-components";
 import Submit from "../../commons/SubmitButton";
+import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import Grid from "@mui/material/Grid";
+import { userEmail } from "../Firebase/firebase";
+import {
+  Formbody,
+  QueryStyle,
+  FormCard,
+  Wrapper,
+  Outform,
+  Modli,
+  Modul,
+  SubmitButtonAlign,
+  CodonQuery,
+  PuffFit,
+} from "./styles";
 
 // https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
 var INITIAL_STATE = {
@@ -13,6 +26,8 @@ var INITIAL_STATE = {
   reverse: ["true", "false"],
 };
 
+var Memory = ["frame", "region", "trim", "reverse"];
+
 class Sixpack extends Component {
   constructor(props) {
     super(props);
@@ -20,10 +35,11 @@ class Sixpack extends Component {
     this.state = {
       toolname: this.props.locationFile.toolName.toLowerCase(),
       Rtype: "out",
-      email: JSON.parse(localStorage.getItem("authUser")).email,
+      email: userEmail,
       codontable: [],
-      codon: "",
+      codon: "Codon",
       sequence: "",
+      isToolQuarySend: false,
       isToolResponse: false,
       toolResponse: [],
       ...INITIAL_STATE,
@@ -36,7 +52,7 @@ class Sixpack extends Component {
 
   parameterDetail = () => {
     // eslint-disable-next-line no-unused-expressions
-    fetch(`/toolname/parameterDetail/emboss_${this.state.toolname}/codontable`)
+    fetch(`/toolname/parameterDetail/${this.state.toolname}/codontable`)
       .then(function (Response) {
         return Response.json();
       })
@@ -57,9 +73,8 @@ class Sixpack extends Component {
     }
   };
 
-  _onClick = (e) => {
-    console.log(e.target.innerText);
-
+  _onClick = (e, keyIdx) => {
+    Memory[keyIdx] = e.target.innerText;
     this.setState({ [e.target.getAttribute("name")]: e.target.innerText });
   };
 
@@ -70,9 +85,25 @@ class Sixpack extends Component {
     });
   };
 
+  handleManualReset = (event) => {
+    event.preventDefault();
+    this.form.reset();
+    this.setState({ isToolQuarySend: false });
+    Object.keys(INITIAL_STATE).map((key, idx) => {
+      return (Memory[idx] = key);
+    });
+  };
+
+  handleReset = () => {
+    this.setState({ codon: "codon" });
+    this.setState({ isToolQuarySend: false });
+  };
+
   onSubmit = (event) => {
+    this.setState({ isToolQuarySend: true });
+
     console.log(this.state);
-    fetch(`/toolname/emboss_${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
+    fetch(`/toolname/${this.state.toolname}/Rtype/${this.state.Rtype}/run`, {
       method: "POST",
       body: JSON.stringify({
         email: this.state.email,
@@ -111,18 +142,31 @@ class Sixpack extends Component {
   };
 
   render() {
-    const { sequence, codontable, isToolResponse, toolResponse } = this.state;
+    const {
+      sequence,
+      codontable,
+      isToolResponse,
+      isToolQuarySend,
+      codon,
+      toolResponse,
+    } = this.state;
 
     const isInvalid = sequence === "" || codontable === "";
     return (
       <Wrapper>
         <FormCard>
-          <form onSubmit={this.onSubmit}>
+          <form
+            onSubmit={this.onSubmit}
+            ref={(form) => (this.form = form)}
+            onReset={this.handleReset}
+          >
             <Formbody>
-              A program to translate nucleic acid sequences to their
-              corresponding peptide sequences. It can translate to the three
-              forward and three reverse frames, and output multiple frame
-              translations at once.
+              <p>
+                A program to translate nucleic acid sequences to their
+                corresponding peptide sequences. It can translate to the three
+                forward and three reverse frames, and output multiple frame
+                translations at once.
+              </p>
               <p></p>
               <p>nucleic acid sequences in any supported format:</p>
               <textarea
@@ -130,19 +174,21 @@ class Sixpack extends Component {
                 name="sequence"
                 value={this.state.value}
                 rows="6"
-                cols="55"
+                cols="62"
               />
               <div class="dropdown">
                 <button
                   class="btn btn-large btn-secondary dropdown-toggle"
-                  style={QueryStyle}
+                  style={CodonQuery}
                   type="button"
                   id="dropdownMenuButton"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  name="codontable"
+                  value={codon}
                 >
-                  Dropdown button
+                  {codon}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   {codontable.map((value, idx) => {
@@ -150,59 +196,79 @@ class Sixpack extends Component {
                   })}
                 </div>
               </div>
-              {Object.keys(INITIAL_STATE).map((key, index) => {
-                return (
-                  <div class="dropdown">
-                    <button
-                      class="btn btn-large btn-secondary dropdown-toggle"
-                      style={QueryStyle}
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      {key}
-                    </button>
-                    <div
-                      class="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton"
-                    >
-                      <ul>
-                        {INITIAL_STATE[key].map((value) => {
-                          //   console.log(value);
-                          return (
-                            <li onClick={this._onClick} name={key}>
-                              {value}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </div>
-                );
-                // INITIAL_STATE[key].map((_, idx) => {});
-              })}
+              <Grid container spacing={2}>
+                {Object.keys(INITIAL_STATE).map((key, index) => {
+                  return (
+                    <Grid item xs={6} md={4}>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-large btn-secondary dropdown-toggle"
+                          style={QueryStyle}
+                          type="button"
+                          id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          name={key}
+                        >
+                          {Memory[index]}
+                        </button>
+                        <div
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <Modul>
+                            {INITIAL_STATE[key].map((value) => {
+                              //   console.log(value);
+                              return (
+                                <Modli
+                                  onClick={(event) =>
+                                    this._onClick(event, index)
+                                  }
+                                  name={key}
+                                >
+                                  {value}
+                                </Modli>
+                              );
+                            })}
+                          </Modul>
+                        </div>
+                      </div>
+                    </Grid>
+                  );
+                  // INITIAL_STATE[key].map((_, idx) => {});
+                })}
+              </Grid>
             </Formbody>
-            <submitButtonAlign>
+            <SubmitButtonAlign>
               <Submit type="submit" disabled={isInvalid}>
                 Submit
               </Submit>
-            </submitButtonAlign>
+              <Submit type="reset" onClick={this.handleManualReset}>
+                Reset
+              </Submit>
+            </SubmitButtonAlign>
           </form>
         </FormCard>
         <Outform>
-          {isToolResponse ? (
-            <div style={{ padding: "10px", margin: "10px" }}>
-              {toolResponse.map((line) => {
-                console.log(toolResponse);
-                return <p>{line}</p>;
-              })}
-            </div>
+          {isToolQuarySend ? (
+            isToolResponse ? (
+              <div style={{ padding: "5px", margin: "10px" }}>
+                {toolResponse.map((line) => {
+                  return (
+                    <p style={{ fontSize: "12px", whiteSpace: "break-spaces" }}>
+                      {line.props.children}
+                    </p>
+                  );
+                })}
+              </div>
+            ) : (
+              <PuffFit>
+                <Puff />
+              </PuffFit>
+            )
           ) : (
-            <div>
-              <h4>nothing to show</h4>
-            </div>
+            <div></div>
           )}
         </Outform>
       </Wrapper>
@@ -211,36 +277,3 @@ class Sixpack extends Component {
 }
 
 export default Sixpack;
-
-const Formbody = styled.div`
-  margin: 20px;
-`;
-
-const QueryStyle = {
-  margin: "10px 0",
-};
-
-const FormCard = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Outform = styled.div`
-  margin: 50px;
-  height: 700px;
-  width: 700px;
-  border-radius: 10px;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-  overflow: scroll;
-`;
