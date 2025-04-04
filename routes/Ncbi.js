@@ -44,21 +44,23 @@ router.get("/dbinfo", (request, response) => {
 router.post("/dbinfoData", (request, response) => {
   console.log("initial query received");
   var DBdata = request.body.DBdata;
-  var Queryterm = request.body.QueryTerm;
+  var Queryterm = request.body.QueryTerm.split(/\s+/).join("+");
   var newQuery = request.body.QueryTerm;
-
-  https.get(base + "espell.fcgi?db=" + DBdata + "&term=" + Queryterm, (res) => {
+  console.log(Queryterm);
+  
+  https.get(base + "espell.fcgi?db=" + "Protein" + "&term=" + Queryterm, (res) => {
     let body = "";
     res
       .on("data", (chunk) => {
         body += chunk;
       })
       .on("end", () => {
+        console.log("body", body)
         Queryterm = Espell(body, Queryterm);
         newQuery = Queryterm.replace(/ /g, "+");
       });
   });
-
+  console.log("sending new query")
   https.get(
     base +
       "esearch.fcgi?db=" +

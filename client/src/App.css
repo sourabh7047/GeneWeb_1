@@ -1,27 +1,6 @@
-* {
+/* * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   scroll-behavior: auto !important;
-}
-
-body {
-  /* min-height: 100vh; */
-  /* height: auto; */
-
-  background: #7474bf; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to top,
-    #7474bf,
-    #348ac7
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to top,
-    #7474bf,
-    #348ac7
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-}
+} */

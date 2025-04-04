@@ -1,0 +1,17 @@
+<div>
+    <Main>
+      <Container>
+        <h1 style={{ padding: "50px", paddingLeft: "130px" }}>SignIn</h1>
+        <SignInForm />
+        <Wrapper>
+          <SignInGoogle />
+          <SignInFacebook />
+          <SignInTwitter />
+        </Wrapper>
+        <LinkWrapper>
+          <PasswordForgetLink />
+          <SignUpLink />
+        </LinkWrapper>
+      </Container>
+    </Main>
+  </div>

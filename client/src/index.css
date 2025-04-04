@@ -1,10 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Roboto&display=swap");
-body {
+/* @import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Roboto&display=swap"); */
+/* body {
   margin: 0;
   font-family: cursive, sans-serif !important;
-  overflow: hidden;
 
   /* background-color: #a871fc !important; */
+   
+*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: linear-gradient(135deg, #f9f9f9, #e8f4f8);
 }
 
 ::-webkit-scrollbar {
@@ -12,7 +24,7 @@ body {
   height: 2px;
 }
 
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: #7550a6;
   border-radius: 0px;
   box-shadow: inset 2px 2px 2px hsla(0, 0%, 100%, 0.25),
@@ -21,9 +33,9 @@ body {
 
 ::-webkit-scrollbar-track {
   background: rgb(149, 152, 255);
-}
+} */
 
-@keyframes float {
+/* @keyframes float {
   0%,
   20%,
   50%,
@@ -39,4 +51,4 @@ body {
   60% {
     transform: translateY(3px);
   }
-}
+} */

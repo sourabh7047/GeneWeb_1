@@ -6,16 +6,46 @@ import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../routes";
 import * as ROLES from "../../constants/roles";
 import styled from "styled-components";
+import {SignInGoogle, SignInFacebook, SignInTwitter} from '../SignIn';
+import './styles.css';
 
 const SignUpPage = () => (
-  <div>
-    <Main>
-      <Container>
-        <h1>SignUp</h1>
-        <SignUpForm />
-      </Container>
-    </Main>
+<>
+  <div class="back-button">
+    <a href={ROUTES.LANDING}><i class="fas fa-arrow-left"></i> Back to Home</a>
   </div>
+
+  <section id="sign-up">
+    <div class="container">
+      <div class="sign-up-box">
+        <h2>Create an Account to Access NCBI & EBI Tools</h2>
+        <p>Join our community of researchers and unlock advanced biological data.</p>
+        <SignUpFormBase/>
+        <div class="social-login">
+          <p>Or sign up with:</p>
+          <div class="social-icons">
+            <SignInGoogle/>
+            <SignInFacebook/>
+            <SignInTwitter/>
+          </div>
+        </div>
+        <div class="signin-link">
+          Already have an account? <a href={ROUTES.SIGN_IN}>Sign In Here</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="partners">
+        <img src="ncbi-logo.png" alt="NCBI Logo"/>
+        <img src="ebi-logo.png" alt="EBI Logo"/>
+      </div>
+    </div>
+  </footer>
+  </>
+
 );
 
 const INITIAL_STATE = {
@@ -108,50 +138,69 @@ class SignUpFormBase extends Component {
       username === "";
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <Input
-          name="username"
-          value={username}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Full Name"
-        />
-        <Input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <Password
-          name="passwordOne"
-          value={passwordOne}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <Password
-          name="passwordTwo"
-          value={passwordTwo}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm Password"
-        />
-        {/* <label>
-          Admin:
-          <input
-            name="isAdmin"
-            type="checkbox"
-            checked={isAdmin}
-            onChange={this.onChangeCheckbox}
-          />
-        </label> */}
-        <Submit disabled={isInvalid} type="submit">
-          Sign Up
-        </Submit>
+      <form onSubmit={this.onSubmit}>
+          <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input name='username' value={username} onChange={this.onChange} type="text" placeholder="Full Name" required/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input name='email' value={email} onChange={this.onChange} type="email" placeholder="Email Address" required/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input name='passwordOne' value={passwordOne} onChange={this.onChange} type="password" placeholder="Password" required/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input name='passwordTwo' value={passwordTwo} onChange={this.onChange} type="password" placeholder="Confirm Password" required/>
+          </div>
+          <button type="submit" disabled={isInvalid} class="cta-button">Sign Up</button>
+          {error && <p>{error.message}</p>}
+        </form>
+      // <Form onSubmit={this.onSubmit}>
+      //   <Input
+      //     name="username"
+      //     value={username}
+      //     onChange={this.onChange}
+      //     type="text"
+      //     placeholder="Full Name"
+      //   />
+      //   <Input
+      //     name="email"
+      //     value={email}
+      //     onChange={this.onChange}
+      //     type="text"
+      //     placeholder="Email Address"
+      //   />
+      //   <Password
+      //     name="passwordOne"
+      //     value={passwordOne}
+      //     onChange={this.onChange}
+      //     type="password"
+      //     placeholder="Password"
+      //   />
+      //   <Password
+      //     name="passwordTwo"
+      //     value={passwordTwo}
+      //     onChange={this.onChange}
+      //     type="password"
+      //     placeholder="Confirm Password"
+      //   />
+        //  <label>
+        //   Admin:
+        //   <input
+        //     name="isAdmin"
+        //     type="checkbox"
+        //     checked={isAdmin}
+        //     onChange={this.onChangeCheckbox}
+        //   />
+        // </label>
+        // <Submit disabled={isInvalid} type="submit">
+        //   Sign Up
+        // </Submit>
 
-        {error && <p>{error.message}</p>}
-      </Form>
+      // </Form>
     );
   }
 }

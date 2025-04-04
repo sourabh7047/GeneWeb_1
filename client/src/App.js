@@ -18,8 +18,11 @@ import HomePage from "./component/Home";
 import ToolRedirect from "./component/ToolRedirect";
 import "./App.css";
 import PrivateRoute from "./PrivateRoute";
+import { withAuthentication } from './component/Session';
 
 const App = () => {
+
+  const isAuthenticated  = (authUser) => !!authUser;
   return (
     <div>
       <Switch>
@@ -28,18 +31,18 @@ const App = () => {
         <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
         <Route path={ROUTES.HOME} component={HomePage} />
         <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-        <PrivateRoute path={ROUTES.SEARCH} exact component={FirstPage} />
+        <PrivateRoute path={ROUTES.SEARCH} component={FirstPage} condition={isAuthenticated} />
         <Route
           path="/:dbdata/webenv/:webenv/page/:page"
           component={(prop) => (
             <SecondPage key={window.location.pathname}></SecondPage>
           )}
         />
-        <Route path="/tools/:tools" component={ToolRedirect} />
+        <PrivateRoute path="/tools/:tools" component={ToolRedirect} condition={isAuthenticated}/>
         <Route path={ROUTES.SIGN_UP} component={SignUpPage} exact />
       </Switch>
     </div>
   );
 };
 
-export default App;
+export default withAuthentication(App);

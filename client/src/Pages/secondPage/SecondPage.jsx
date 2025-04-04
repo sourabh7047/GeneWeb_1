@@ -1,10 +1,10 @@
 import Header from "./Header";
-// import BodyLayout from "./BodyLayout";
 import Summary from "./Summary";
 import PaginationComponent from "./PaginationComponent";
 import { useLocation, useParams } from "react-router";
 import WebContext from "./context";
 import styled from "styled-components";
+import SearchAppBar from "../../commons/nav";
 
 const SecondPage = (props) => {
   let Location = useLocation();
@@ -22,26 +22,35 @@ const SecondPage = (props) => {
 
   return (
     <WebContext.Provider value={dataConstruct}>
-      <Header dataConstruct={dataConstruct} />
-      <Bodylayout>
-        <Data>
-          <Summary dataConstruct={dataConstruct} />
-        </Data>
+      <SearchAppBar />
+      <MainContainer>
+        <Bodylayout>
+          <Data>
+            <Summary dataConstruct={dataConstruct} />
+          </Data>
 
-        <PaginationComponent
-          totalDataset={dataConstruct.length}
-          dataConstruct={dataConstruct}
-        />
-      </Bodylayout>
+          <PaginationComponent
+            totalDataset={dataConstruct.length}
+            dataConstruct={dataConstruct}
+          />
+        </Bodylayout>
+      </MainContainer>
     </WebContext.Provider>
   );
 };
 
 export default SecondPage;
 
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the container spans the full viewport height */
+  padding-top: 60px; /* Accounts for the navigation bar's height */
+`;
+
 const Data = styled.div`
-  overflow: auto;
-  height: 100%;
+  overflow: auto; /* Allows scrolling if content overflows */
+  height: 100%; /* Takes up the full height of the parent */
 `;
 
 const Bodylayout = styled.div`
@@ -49,20 +58,19 @@ const Bodylayout = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
-  height: 87%;
-  margin: 10px 0;
+  margin: 10px auto; /* Centers the layout horizontally */
   padding: 1rem;
-  position: absolute;
-  right: 5%;
-  top: 6%;
-  width: 80%;
-  z-index: 2;
+  width: 80%; /* Responsive width */
+  max-width: 1200px; /* Limits the maximum width */
 
-  border-radius: 10px;
-  backdrop-filter: blur(5px);
+  /* Dynamic height calculation */
+  height: calc(100vh - 120px); /* Subtract navigation bar height (60px) + padding/margin (60px) */
   background-color: rgba(201, 75, 236, 0.151);
   box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
   border: 1px rgba(255, 255, 255, 0.4) solid;
   border-bottom: 1px rgba(40, 40, 40, 0.35) solid;
   border-right: 1px rgba(40, 40, 40, 0.35) solid;
+
+  /* Overflow behavior */
+  overflow: hidden; /* Prevents content from spilling out */
 `;

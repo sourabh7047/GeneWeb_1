@@ -1,134 +1,141 @@
-import React, { useState } from "react";
-// import Cards from "./Cards";
-import classes from "./SummaryCard.module.css";
-import Button from "@material-ui/core/Button";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import FileFormat from "./FileFormat";
 import Formatmenus from "./Formatmenus";
 import download from "downloadjs";
 import styled from "styled-components";
 
-function SummaryCard(props) {
+const SummaryCard = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
+  // Handle dropdown menu open
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
 
-  async function handleClose(id, format) {
-    // console.log("entered ///////////////////////////");
+  // Handle dropdown menu close and file download
+  const handleClose = async (id, format) => {
     setAnchorEl(null);
     if (format !== "backdropClick") {
-      var retmode = "";
-      var rettype = "";
-      FileFormat.databaseList.forEach((database) => {
-        console.log(database + "   " + props.dataConstruct.dbdata);
+      let retmode = "";
+      let rettype = "";
 
+      // Determine the file format details based on the database
+      FileFormat.databaseList.forEach((database) => {
         if (database === props.dataConstruct.dbdata) {
-          // console.log(";;;;;;;;;;;;;;;;;;;;;;;");
           retmode = FileFormat.databaseData[database].Filetype[format].retmode;
           rettype = FileFormat.databaseData[database].Filetype[format].retype;
         }
       });
-      let Acc = id.split(" ").pop();
 
-      let fetchData = {
-        retmode: retmode,
-        rettype: rettype,
-      };
+      // Extract Accession ID
+      const Acc = id.split(" ").pop();
 
-      console.log(Acc);
-      await fetch(`/internal/${props.dataConstruct.dbdata}/download/${Acc}`, {
-        method: "POST",
-        body: JSON.stringify(fetchData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then(function (response) {
-          if (response.ok) {
-            return response.text();
-          } else {
-            throw new Error("Something went wrong");
+      // Fetch data for download
+      const fetchData = { retmode, rettype };
+      try {
+        const response = await fetch(
+          `/internal/${props.dataConstruct.dbdata}/download/${Acc}`,
+          {
+            method: "POST",
+            body: JSON.stringify(fetchData),
+            headers: { "Content-Type": "application/json" },
           }
-        })
-        .then(function (data) {
-          download(data, `sequence.${rettype}`, "text/fasta");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        );
+
+        if (!response.ok) throw new Error("Failed to download file");
+
+        const data = await response.text();
+        download(data, `sequence.${rettype}`, "text/fasta");
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
-  console.log("entered SummaryCard");
+  };
+
   return (
-    <li className={classes.list}>
-      <Cards>
-        <Title>{props.title}</Title>
+    <CardContainer>
+      <Card>
+        <Title>{props.title || "Untitled"}</Title>
         <Hr />
         <Content>
-          <p>{props.FirstField}</p>
-          <p>{props.SecondField}</p>
-          <p>{props.ThirdField}</p>
-          <p>{props.FourthField}</p>
-          <Button
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            endIcon={<ArrowDropDownIcon />}
-            onClick={handleClick}
-            classes={{
-              root: classes.root,
-            }}
-          >
-            Download
-          </Button>
-          <Formatmenus
-            anchorEl={anchorEl}
+          <p><strong>Field 1:</strong> {props.FirstField || "N/A"}</p>
+          <p><strong>Field 2:</strong> {props.SecondField || "N/A"}</p>
+          <p><strong>Field 3:</strong> {props.ThirdField || "N/A"}</p>
+          <p><strong>Field 4:</strong> {props.FourthField || "N/A"}</p>
+          <DownloadButtonWrapper>
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<ArrowDropDownIcon />}
+              onClick={handleClick}
+            >
+              Download
+            </Button>
+            <Formatmenus
+              anchorEl={anchorEl}
             handleClose={handleClose}
             Format={props.Format}
             id={props.FirstField}
-          />
+            />
+          </DownloadButtonWrapper>
         </Content>
-      </Cards>
-    </li>
+      </Card>
+    </CardContainer>
   );
-}
+};
 
 export default SummaryCard;
 
-const Hr = styled.hr`
-  margin-bottom: 5px;
+// Styled Components
+const CardContainer = styled.li`
+  list-style: none;
+  margin: 1rem 0;
+  width: 100%;
+`;
+
+const Card = styled.div`
+  background: linear-gradient(135deg, #ffffff, #f0f8ff);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const Title = styled.h4`
-  line-height: 2rem;
-  margin: 0px;
+  font-size: 1.2rem;
+  color: #0074d9;
+  margin-bottom: 0.5rem;
+`;
+
+const Hr = styled.hr`
+  border: 0;
+  height: 1px;
+  background: #ddd;
+  margin: 0.5rem 0;
 `;
 
 const Content = styled.div`
-  line-height: 1rem;
+  line-height: 1.5rem;
+  color: #333;
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  strong {
+    color: #0074d9;
+  }
 `;
 
-const Cards = styled.div`
-  width: 100%;
-  height: 220px;
-  color: white;
-  margin: 20px 0px;
-  padding: 20px;
-  gap: 20px;
-  display: block;
-  border-radius: 10px;
-  backdrop-filter: blur(4px);
-  background-color: rgba(201, 75, 236, 0.151);
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 0px 0px;
-  border: 1px rgba(255, 255, 255, 0.4) solid;
-  border-bottom: 1px rgba(40, 40, 40, 0.35) solid;
-  border-right: 1px rgba(40, 40, 40, 0.35) solid;
-
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.7) 2px 8px 15px;
-    box-shadow: #fbffff 0px 0px 20px;
-    transition: 0.25s;
-  }
+const DownloadButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
 `;

@@ -3,7 +3,6 @@ import "firebase/compat/auth";
 import "firebase/compat/database";
 import "firebase/compat/firestore";
 import React, { Component } from "react";
-
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -11,6 +10,8 @@ const config = {
   projectId: process.env.REACT_APP_PROJECT_ID,
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 let userEmail;
@@ -61,6 +62,9 @@ class Firebase {
   doSignInWithFacebook = () => this.auth.signInWithPopup(this.facebookProvider);
 
   doSignInWithTwitter = () => this.auth.signInWithPopup(this.twitterProvider);
+
+  getRedirectResults = async () => await this.auth.getRedirectResult();
+  
 
   doSignOut = () => this.auth.signOut();
 

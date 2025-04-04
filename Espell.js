@@ -5,6 +5,7 @@ const parseString = xml2js.parseString;
   let NewQueryterm = "";
   parseString(body, function (err, result) {
     let termCount = 0;
+    console.log('inside')
     console.log(result.eSpellResult.CorrectedQuery);
     result.eSpellResult.CorrectedQuery.map((ele) => {
       NewQueryterm += ele;

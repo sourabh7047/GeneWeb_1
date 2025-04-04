@@ -1,0 +1,301 @@
+/* General Styles */
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  /* Header Section */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    background: linear-gradient(135deg, #ffffff, #f0f8ff);
+    color: #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+  
+  header.scrolled {
+    background: linear-gradient(135deg, #f0f8ff, #d1e7fd);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  header .logo img {
+    height: 50px;
+    transition: transform 0.3s ease;
+  }
+  
+  header .logo img:hover {
+    transform: scale(1.05);
+  }
+  
+  header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  header nav ul li a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease, letter-spacing 0.3s ease;
+  }
+  
+  header nav ul li a:hover {
+    color: #0074D9;
+    letter-spacing: 1px;
+  }
+  
+  .lp-cta-button {
+    background: linear-gradient(135deg, #0074D9, #2ECC40);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .lp-cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Hero Section */
+  #hero {
+    background: url('https://images.unsplash.com/photo-1641903202531-bfa6bf0c6419?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover;
+    color: white;
+    text-align: center;
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  
+  #hero > div {
+    position: relative;
+    z-index: 2;
+  }
+  
+  #hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: fadeIn 2s ease-in-out;
+  }
+  
+  #hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 2.5s ease-in-out;
+  }
+  
+  #hero button {
+    animation: bounce 1.5s infinite;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  /* Key Features Section */
+  #features {
+    padding: 3rem 0;
+    text-align: center;
+    background: #fff;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature-item {
+    background: linear-gradient(135deg, #ffffff, #f0f8ff);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .feature-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 116, 217, 0.1);
+    z-index: 1;
+    transition: left 0.5s ease;
+  }
+  
+  .feature-item:hover::before {
+    left: 0;
+  }
+  
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-item i {
+    font-size: 2rem;
+    color: #0074D9;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-item:hover i {
+    transform: rotate(360deg);
+  }
+  
+  /* Why Choose Us Section */
+  #why-choose-us {
+    padding: 3rem 0;
+    text-align: center;
+    background: #f0f8ff;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  #why-choose-us ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  /* Newsletter Section */
+  #newsletter {
+    background: linear-gradient(135deg, #f0f8ff, #d1e7fd);
+    color: #333;
+    text-align: center;
+    padding: 3rem 0;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+  
+  #newsletter form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  #newsletter input {
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+  }
+  
+  #newsletter input:focus {
+    transform: scale(1.02);
+    border-color: #0074D9;
+  }
+  
+  #newsletter button {
+    background: linear-gradient(135deg, #0074D9, #2ECC40);
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  #newsletter button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Footer Section */
+  footer {
+    background: linear-gradient(135deg, #f0f8ff, #d1e7fd);
+    color: #333;
+    padding: 2rem 0;
+    text-align: center;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  footer .footer-links ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  footer .footer-links ul li a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  footer .footer-links ul li a:hover {
+    color: #0074D9;
+  }
+  
+  footer .social-media a {
+    color: #333;
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  footer .social-media a:hover {
+    transform: scale(1.1);
+  }
+  
+  footer .partners img {
+    height: 50px;
+    margin: 1rem 0.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  footer .partners img:hover {
+    transform: scale(1.05);
+  }

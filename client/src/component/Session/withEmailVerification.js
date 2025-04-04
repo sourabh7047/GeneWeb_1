@@ -4,12 +4,13 @@ import auth from 'firebase/compat/auth';
 import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
 
-const needsEmailVerification = authUser =>
-  authUser &&
+const needsEmailVerification = authUser =>{
+  console.log(authUser);
+  return authUser &&
   !authUser.emailVerified &&
   authUser.providerData
     .map(provider => provider.providerId)
-    .includes('password');
+    .includes('password');}
 
 const withEmailVerification = Component => {
   class WithEmailVerification extends React.Component {

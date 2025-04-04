@@ -1,21 +1,31 @@
 import React, { Component, useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
+import { AuthUserContext } from "./component/Session";
 // import { withFirebase } from "./component/Firebase";
-import { currentUser } from "./component/Firebase/firebase";
-
-export default function PrivateRouteBase({ component: Component, ...rest }) {
-    const user = currentUser
+export default function PrivateRouteBase({ component: Component, condition, ...rest }) {
   return (
-    <Route
-      {...rest}
-      render={(props) => {
-        return user ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/signin" />
-        );
-      }}
-    ></Route>
+
+      <Route
+        {...rest}
+        render={(props) => {
+          return (
+            <AuthUserContext.Consumer>
+              {authUser => {
+                return condition(authUser) ? (
+                  <Component {...props} />
+                ) : (
+                  <Redirect to="/signin" />
+                );
+              }}
+            </AuthUserContext.Consumer>
+          );
+          // return user ? (
+          //   <Component {...props} />
+          // ) : (
+          //   <Redirect to="/signin" />
+          // );
+        }}
+      ></Route>
   );
 }
 

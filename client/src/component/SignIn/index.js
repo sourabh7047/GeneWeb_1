@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { compose } from "recompose";
 import { SignUpLink } from "../SignUp";
 import { PasswordForgetLink } from "../PasswordForget";
@@ -8,6 +8,7 @@ import * as ROUTES from "../../routes";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AlertSnackbar from "../../commons/AlertSnakbar";
+import './styles.css';
 
 import {
   faGoogle,
@@ -25,23 +26,44 @@ const LinkWrapper = styled.div`
 `;
 
 const SignInPage = () => (
+
   <div>
-    <Main>
-      <Container>
-        <h1 style={{ padding: "50px", paddingLeft: "130px" }}>SignIn</h1>
+  <div class="back-button">
+    <a href={ROUTES.LANDING}><i class="fas fa-arrow-left"></i> Back to Home</a>
+  </div>
+
+  <section id="sign-in">
+    <div class="container">
+      <div class="sign-in-box">
+        <h2>Sign In to Access NCBI & EBI Tools</h2>
+        <p>Unlock advanced search capabilities and curated biological data.</p>
         <SignInForm />
-        <Wrapper>
+        
+        <div class="social-login">
+          <p>Or sign in with:</p>
+          <div class="social-icons">
           <SignInGoogle />
           <SignInFacebook />
           <SignInTwitter />
-        </Wrapper>
-        <LinkWrapper>
-          <PasswordForgetLink />
-          <SignUpLink />
-        </LinkWrapper>
-      </Container>
-    </Main>
-  </div>
+          </div> 
+        </div>
+        <div class="signup-link">
+          Don't have an account? <a href={ROUTES.SIGN_UP}>Sign Up Here</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="partners">
+        <img src="ncbi-logo.png" alt="NCBI Logo"/>
+        <img src="ebi-logo.png" alt="EBI Logo"/>
+      </div>
+    </div>
+  </footer>
+</div>
+  
 );
 
 const INITIAL_STATE = {
@@ -92,33 +114,22 @@ class SignInFormBase extends Component {
     const isInvalid = password === "" || email === "";
 
     return (
-      <Div>
-        {/* <Img src="https://bit.ly/2tlJLoz" /> */}
+        <form onSubmit={this.onSubmit}>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input name='email' type="email" value={email} placeholder="Email Address" onChange={this.onChange} required/>
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input name='password' type="password" value={password} placeholder="Password" onChange={this.onChange} required/>
+          </div>
+          <button type="submit" class="si-cta-button" disabled={isInvalid} >Sign In</button>
+          <div class="forgot-password">
+            <a href={ROUTES.PASSWORD_FORGET}>Forgot Password?</a>
+          </div>
+          { error && <p>{error.message}</p> }
+        </form>
 
-        {/* <span><a href="#">Forgot Password?</a></span> */}
-
-        <Form onSubmit={this.onSubmit}>
-          <Input
-            name="email"
-            value={email}
-            onChange={this.onChange}
-            type="text"
-            placeholder="Email Address"
-          />
-          <Password
-            name="password"
-            value={password}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Password"
-          />
-          <Submit disabled={isInvalid} type="submit">
-            Sign In
-          </Submit>
-
-          {error && <p>{error.message}</p>}
-        </Form>
-      </Div>
     );
   }
 }
@@ -129,32 +140,36 @@ class SignInGoogleBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
-  onSubmit = (event) => {
-    const { email, password } = this.state;
+  onSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
 
-    this.props.firebase
-      .doSignInWithGoogle()
-      .then((socialAuthUser) => {
-        // Create a user in your Firebase Realtime Database too
-        return this.props.firebase.user(socialAuthUser.user.uid).set({
-          username: socialAuthUser.user.displayName,
-          email: socialAuthUser.user.email,
-          roles: {},
-        });
-      })
-      .then(() => {
-        this.setState({ email: email });
-        this.props.history.push(ROUTES.SEARCH);
-      })
-      .catch((error) => {
-        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
-          error.message = ERROR_MSG_ACCOUNT_EXISTS;
-        }
-        this.setState({ error });
+    try {
+      // Initiate Google Sign-In with Redirect
+      const socialAuthUser = await this.props.firebase.doSignInWithGoogle();
+
+      // Create or update user data in Firebase Realtime Database
+      await this.props.firebase.user(socialAuthUser.user.uid).set({
+        username: socialAuthUser.additionalUserInfo.profile.name,
+        email: socialAuthUser.additionalUserInfo.profile.email,
+        roles: {}, // Add any additional roles if needed
       });
 
-    event.preventDefault();
+      this.setState({ error: null });
+      this.props.history.push(ROUTES.SEARCH);
+
+    } catch (error) {
+      console.error("Error during Google Sign-In:", error);
+
+      // Handle specific error codes
+      if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+        error.message = ERROR_MSG_ACCOUNT_EXISTS;
+      }
+
+      this.setState({ error });
+    }
+
   };
+
 
   render() {
     const { error } = this.state;
@@ -181,10 +196,10 @@ class SignInFacebookBase extends Component {
     this.state = { error: null };
   }
 
-  onSubmit = (event) => {
-    this.props.firebase
-      .doSignInWithFacebook()
-      .then((socialAuthUser) => {
+  onSubmit = async (event) => {
+    const res = await this.props.firebase.doSignInWithFacebook();
+    console.log(res);
+    res.then((socialAuthUser) => {
         // Create a user in your Firebase Realtime Database too
         return this.props.firebase.user(socialAuthUser.user.uid).set({
           username: socialAuthUser.additionalUserInfo.profile.name,

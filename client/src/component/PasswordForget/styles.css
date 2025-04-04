@@ -1,0 +1,152 @@
+
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  /* Back Button */
+  .back-button {
+    padding: 1rem;
+    text-align: left;
+  }
+  
+  .back-button a {
+    color: #0074D9;
+    text-decoration: none;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+  }
+  
+  .back-button a:hover {
+    color: #FF416C;
+  }
+  
+  /* Password Reset Section */
+  #password-reset {
+    padding: 5rem 0;
+    text-align: center;
+    background: url('https://images.unsplash.com/photo-1641903202531-bfa6bf0c6419?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #password-reset::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  
+  #password-reset > div {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .reset-box {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .reset-box h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #0074D9;
+  }
+  
+  .reset-box p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    color: #555;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    background: #f0f8ff;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .input-group i {
+    color: #0074D9;
+    margin-right: 1rem;
+  }
+  
+  .input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+  }
+  
+  .pf-cta-button {
+    background: linear-gradient(135deg, #0074D9, #2ECC40);
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .pf-cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .signin-link {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+  }
+  
+  .signin-link a {
+    color: #0074D9;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .signin-link a:hover {
+    color: #FF416C;
+  }
+  
+  /* Footer Section */
+  footer {
+    background: linear-gradient(135deg, #f0f8ff, #d1e7fd);
+    color: #333;
+    padding: 2rem 0;
+    text-align: center;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  footer .partners img {
+    height: 50px;
+    margin: 1rem 0.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  footer .partners img:hover {
+    transform: scale(1.05);
+  }

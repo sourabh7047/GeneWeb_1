@@ -1,239 +1,172 @@
-import React, { useState, useEffect, useRef } from "react";
-import Menus from "../frontPage/Menus";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import Warning from "./Header/Warning";
-import Backdrop from "./Header/Backdrop";
+import styled from "styled-components";
+import SearchBar from "material-ui-search-bar";
 import Button from "@material-ui/core/Button";
 import StorageIcon from "@material-ui/icons/Storage";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import { makeStyles } from "@material-ui/styles";
-import SearchBar from "material-ui-search-bar";
-import styled from "styled-components";
+import Menus from "./Menus"; // Import the Menus component
 import "./FirstPage.css";
 
-const useStyles = makeStyles({
-  root: {
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-    border: 0,
-    borderRadius: 3,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-    color: "white",
-    height: 48,
-    padding: "0 30px",
-  },
-});
-
 const FirstPage = () => {
-  const [anchorEle, setAnchorEle] = useState(null);
-  const [IsLoading, setIsLoading] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null); // Renamed from 'anchorEle' to 'anchorEl'
   const [DbName, setDbName] = useState("Database");
-  const [WarningHook, setWarningHook] = useState(false);
-  const history = useHistory();
-  const DBdataRef = useRef();
   const [QueryTerm, setQueryTerm] = useState("");
-  // const QuerytermRef = useRef();
-  const [WebData, setWebData] = useState({
-    dbData: "",
-    webEnv: "",
-  });
+  const history = useHistory();
 
-  // console.log(history);
-  // const [Navbar, setNavbar] = useState(false);
-  // const [History, setHistory] = useState();
-  // const [WebEnv, setWebEnv] = useState("");
-  // const [Dbdata, setDbdata] = useState("");
-  // const classes = useStyles();
-
-  //-----------------------------------------------------------EVENT HANDLERS-----------------------------------
-  const handleClick = (event) => {
-    setAnchorEle(event.currentTarget);
-  };
+  // Event Handlers
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
 
   const handleClose = (name) => {
-    if (name !== null) {
+    if (name) {
       setDbName(name);
     }
-    setAnchorEle(null);
+    setAnchorEl(null); // Updated to use 'anchorEl'
   };
-
-  const removeWarning = () => {
-    setWarningHook(false);
-  };
-
-  const handleDbStatus = () => {};
 
   const handleOnChange = (event) => {
-    setQueryTerm(event);
-  };
+    var event = event.trim();
+    setQueryTerm(event)}
 
   const submitHandler = (event) => {
     event.preventDefault();
-    // console.log(event);
-    const EnteredDbdata = DBdataRef.current.value;
-    const EnteredQueryTerm = QueryTerm;
-
-    if (EnteredDbdata === "Database") {
-      setWarningHook(true);
+    if (DbName === "Database") {
+      alert("Please select a database!");
     } else {
-      const searchData = {
-        DBdata: EnteredDbdata,
-        QueryTerm: EnteredQueryTerm,
-      };
-
-      // it is not any other component that need  to be bind to the component this OR using anonymus function thus we are directly calling the function
-      onAddNewSearch(searchData);
+      const searchData = { DBdata: DbName, QueryTerm };
+      console.log(searchData);
+      fetch("/internal/dbinfoData", {
+        method: "POST",
+        body: JSON.stringify(searchData),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => response.json())
+        .then((myJson) => {
+          history.push({
+            pathname: `/${myJson.dbdata}/webenv/${myJson.webEnv}/page/${myJson.page}`,
+            state: { query: myJson.queryKey, length: myJson.length },
+          });
+        });
     }
   };
 
-  // const changeBackground = () => {
-  //   console.log(window.scrollY);
-  //   let x = window.scrollY;
-  //   if (x > 80) {
-  //     this.setState({
-  //       navbar: true,
-  //     });
-  //     console.log("yes");
-  //   } else {
-  //     this.setState({
-  //       navbar: false,
-  //     });
-  //   }
-  // };
-
-  const onAddNewSearch = (searchData) => {
-    // it is a standard javascipt function nothing to do with node
-    console.log(searchData);
-    fetch("/internal/dbinfoData", {
-      method: "POST",
-      body: JSON.stringify(searchData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then((myJson) => {
-        console.log(myJson);
-        setWebData({ dbdata: myJson.dbdata, webEnv: myJson.webEnv });
-        // this.setState({ dbdata: myJson.dbdata, webEnv: myJson.webEnv });
-
-        history.push({
-          pathname: `/${myJson.dbdata}/webenv/${myJson.webEnv}/page/${myJson.page}`,
-          state: {
-            query: myJson.queryKey,
-            length: myJson.length,
-          },
-        });
-      });
+  // Database Status Handler
+  const handleDbStatus = (status) => {
+    console.log(`Database Status: ${status ? "Loading..." : "Ready"}`);
   };
 
-  useEffect(() => {
-    // window.addEventListener("scroll", changeBackground);;
-  }, []);
-
   return (
-    <div>
-      <div classname="view">
-        <Nav>
-          <LeftPlacement>
-            <h1>Gntx</h1>
-          </LeftPlacement>
-          {/* <div style={{ flex: "1" }}></div> */}
-          <RightPlacement>
-            <Form onSubmit={submitHandler}>
-              <ContentBox>
-                <DbButton
-                  style={{
-                    background: "#fff",
-                    height: "3rem",
-                    width: "10rem",
-                  }}
-                  startIcon={<StorageIcon />}
-                  endIcon={<KeyboardArrowDownIcon size="large" />}
-                  aria-haspopup="true"
-                  aria-controls="Menus"
-                  onClick={handleClick}
-                  name="DBdata"
-                  value={DbName}
-                  ref={DBdataRef}
-                  // className={useStyles.root}
-                >
-                  {DbName}
-                </DbButton>
-                <Menus
-                  anchorEl={anchorEle}
-                  handleClose={handleClose}
-                  DbStatus={handleDbStatus}
-                />
-              </ContentBox>
-              <ContentBox>
-                <SearchBar
-                  value={QueryTerm}
-                  onChange={(e) => {
-                    handleOnChange(e);
-                  }}
-                  style={{ width: "30rem", minWidth: "5rem" }}
-                />
-              </ContentBox>
-            </Form>
-          </RightPlacement>
-          {WarningHook && (
-            <Warning DbName={DbName} removeWarning={removeWarning} />
-          )}
-          {WarningHook && <Backdrop removeWarning={removeWarning} />}
-        </Nav>
-      </div>
-    </div>
+    <MainContainer>
+
+      {/* Hero Section */}
+      <HeroSection>
+        <h1>Welcome to Gntx</h1>
+        <p>Search across integrated NCBI and EBI databases effortlessly.</p>
+      </HeroSection>
+
+      {/* Search Bar Section */}
+      <SearchSection>
+        <Form onSubmit={submitHandler}>
+          <ContentBox>
+            <DbButton
+              startIcon={<StorageIcon />}
+              endIcon={<KeyboardArrowDownIcon />}
+              onClick={handleClick}
+            >
+              {DbName}
+            </DbButton>
+            <Menus
+              anchorEl={anchorEl} // Updated to use 'anchorEl'
+              handleClose={handleClose}
+              DbStatus={handleDbStatus}
+            />
+          </ContentBox>
+          <ContentBox>
+            <SearchBar
+              value={QueryTerm}
+              onChange={(e) => handleOnChange(e)}
+              placeholder="Enter search term..."
+            />
+          </ContentBox>
+          <SearchButton type="submit">Search</SearchButton>
+        </Form>
+      </SearchSection>
+    </MainContainer>
   );
 };
 
 export default FirstPage;
 
-const Nav = styled.div`
-  background: transparent;
-  position: sticky;
-  top: 0;
-  transition: 1s;
-
-  top: ${({ popNavProp }) =>
-    !popNavProp ? "0px !important;" : "-90px !important;"};
-
-  height: 90px;
+// Styled Components
+const MainContainer = styled.div`
+  background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
+  min-height: 100vh;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  z-index: 10;
-  margin-bottom: 10px;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+`;
 
-  @media (min-width: 992px) {
-    width: 100vw;
+const HeroSection = styled.div`
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    color: #0074d9;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #555;
   }
 `;
 
-const DbButton = styled(Button)`
-  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
-    0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+const SearchSection = styled.div`
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
 `;
 
 const Form = styled.form`
   display: flex;
-  justify-content: space-around;
-`;
-
-const LeftPlacement = styled.div`
-  padding: 0px 20px;
-`;
-
-const RightPlacement = styled.div`
-  padding: 0px 20px;
-  display: flex;
-  justify-content: space-around;
-  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
 `;
 
 const ContentBox = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-right: 2rem;
+  align-items: center;
+`;
+
+const DbButton = styled(Button)`
+  background: linear-gradient(135deg, #0074d9, #2ecc40);
+  color: white;
+  border-radius: 25px;
+  padding: 0.7rem 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const SearchButton = styled(Button)`
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  color: white;
+  border-radius: 25px;
+  padding: 0.7rem 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
