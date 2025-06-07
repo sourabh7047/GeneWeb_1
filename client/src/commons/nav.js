@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Button from "@material-ui/core/Button";
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +16,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { SearchContext } from '../context/searchContext';
+import ToolsMenu from '../Pages/secondPage/ToolsMenu';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -78,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+  const [anchor, setanchor] = useState(null);
   const {setSearchQuery} = React.useContext(SearchContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -88,15 +91,44 @@ export default function PrimarySearchAppBar() {
 
   // search handlers
   const handleOnChange = (event) => {
+    console.log(event)
     setQueryTerm(event.currentTarget);
   }
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
+    if (DbName === "Database") {
+      alert("Please select a database!");
+    } else {
+      const searchData = { DBdata: DbName, QueryTerm };
+      console.log(searchData);
+      fetch("/internal/dbinfoData", {
+        method: "POST",
+        body: JSON.stringify(searchData),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => response.json())
+        .then((myJson) => {
+          history.push({
+            pathname: `/${myJson.dbdata}/webenv/${myJson.webEnv}/page/${myJson.page}`,
+            state: { query: myJson.queryKey, length: myJson.length },
+          });
+        });
+    }
+  }
 
-    const query = event.target.search.value;
-    console.log("queriiii....", query);
-    setSearchQuery(query);
+  const handleClick = (event) => {
+    setanchor(event.currentTarget);
+  }
+
+  const handleClose = (event) => {
+    setanchor(null);
+    if (event) {
+      var str = event.target.textContent;
+      var modifiedStr = str.toLowerCase().replace(/ /g, "_");
+      // history.push("/tools/backtranseq");
+      // `/webenv/${props.dataConstruct.webEnv}/tools/${modifiedStr}`
+    }
   }
 
   const handleProfileMenuOpen = (event) => {
@@ -213,7 +245,17 @@ export default function PrimarySearchAppBar() {
 
           {/* Spacer to push icons to the right */}
           <div className={classes.grow} />
-
+          
+          <div className={classes.sectionDesktop}>
+          <Button
+                  aria-haspopup="true"
+                  aria-controls={ToolsMenu}
+                  onClick={handleClick}
+                >
+                  Tools
+          </Button>
+          <ToolsMenu anchor={anchor} handleClose={handleClose} />
+          </div>
           {/* Right-aligned icons (desktop) */}
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">

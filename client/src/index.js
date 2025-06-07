@@ -5,8 +5,9 @@ import React from "react";
 // functioning now this can add html or actual javascript
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import * as serviceWorker from './serviceWorker';
-import Firebase, { FirebaseContext } from './component/Firebase';
+import * as serviceWorker from "./serviceWorker";
+import Firebase, { FirebaseContext } from "./component/Firebase";
+import { SearchProvider } from "./context/searchContext";
 
 import "./index.css";
 import App from "./App";
@@ -15,13 +16,13 @@ import App from "./App";
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
     <BrowserRouter>
-      <App />
+      <SearchProvider>
+        <App />
+      </SearchProvider>
     </BrowserRouter>
   </FirebaseContext.Provider>,
   document.getElementById("root")
 );
-
-
 
 // so to convert the javascript into the form which is readable by the  html elements then...
 // you can add any sort of javascript text whether it is text a math formula or a script with any style attached
