@@ -1,13 +1,13 @@
 import { useState } from "react";
 import classes from "./Header.module.css";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import Button from "@mui/material/Button";
+import { createTheme  } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ToolsMenu from "./ToolsMenu";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = createTheme ((theme) => ({
   root: {
     color: "#fff",
     padding: "5px 20px",
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Header(props) {
   const [anchor, setanchor] = useState(null);
   const mStyle = useStyles();
-  const history = useHistory();
+  const history = useNavigate();
 
   function handleClick(event) {
     setanchor(event.currentTarget);

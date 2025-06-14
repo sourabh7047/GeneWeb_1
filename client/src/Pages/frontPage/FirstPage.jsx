@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SearchBar from "material-ui-search-bar";
-import Button from "@material-ui/core/Button";
-import StorageIcon from "@material-ui/icons/Storage";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+// import SearchBar from "material-ui-search-bar";
+import Button from "@mui/material/Button";
+import StorageIcon from "@mui/icons-material/Storage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Menus from "./Menus"; // Import the Menus component
 import "./FirstPage.css";
 
@@ -12,7 +12,7 @@ const FirstPage = () => {
   const [anchorEl, setAnchorEl] = useState(null); // Renamed from 'anchorEle' to 'anchorEl'
   const [DbName, setDbName] = useState("Database");
   const [QueryTerm, setQueryTerm] = useState("");
-  const history = useHistory();
+  const history = useNavigate();
 
   // Event Handlers
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -82,11 +82,11 @@ const FirstPage = () => {
             />
           </ContentBox>
           <ContentBox>
-            <SearchBar
+            {/* <SearchBar
               value={QueryTerm}
               onChange={(e) => handleOnChange(e)}
               placeholder="Enter search term..."
-            />
+            /> */}
           </ContentBox>
           <SearchButton type="submit">Search</SearchButton>
         </Form>

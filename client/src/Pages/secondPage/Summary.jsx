@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import SummaryList from "./SummaryList";
-import { ReactComponent as Puff } from "../../Assets/puff.svg";
+import Puff  from "../../Assets/puff.svg";
 import Styled from "styled-components";
 
 function Summary(props) {

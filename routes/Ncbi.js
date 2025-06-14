@@ -67,7 +67,7 @@ router.post("/dbinfoData", (request, response) => {
       DBdata +
       "&term=" +
       newQuery +
-      "&usehistory=y" +
+      "&useNavigate=y" +
       "&RetStart=" +
       retstart +
       "&retmode=json&idtype=acc",

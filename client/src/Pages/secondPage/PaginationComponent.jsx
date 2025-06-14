@@ -1,11 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Pagination from "@material-ui/lab/Pagination";
+import { createTheme  } from "@mui/material";
+import Pagination from '@mui/material/Pagination';
 import classes from "./PaginationComponent.module.css";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = createTheme ((theme) => ({
   root: {
     "& > *": {
       marginTop: theme.spacing(2),
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PaginationButtons(props) {
   console.log(props);
   const classes = useStyles();
-  const history = useHistory();
+  const history = useNavigate();
 
   const singlePageSet = 20;
   const totalPages = Math.ceil(props.totalDataset / singlePageSet);

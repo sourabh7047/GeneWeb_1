@@ -3,14 +3,14 @@
   "version": "5.9.1",
   "description": "\"backend of genome project\"",
   "engines": {
-    "node": "14.17.x"
+    "node": "22.16.x"
   },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "start": "node server.js",
-    "client": "cd client && npm i --legacy-peer-deps && npm start",
+    "client": "cd client && npm i --legacy-peer-deps && npm run dev",
     "dev": "concurrently -n 'server,client' -c 'red,green'  \"npm run start\" \"npm run client\""
   },
   "author": "\"sourabh asharma\"",
@@ -23,7 +23,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.18.1",
-    "node": "^14.17.3",
+    "firebase": "^11.9.1",
+    "node": "v22.16.0",
     "node-fetch": "^2.6.6",
     "xhr2": "^0.2.1",
     "xml2js": "^0.4.23"

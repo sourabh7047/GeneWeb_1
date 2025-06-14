@@ -1,6 +1,6 @@
 // import React, { useState, useEffect } from "react";
-// import Menu from "@material-ui/core/Menu";
-// import MenuItem from "@material-ui/core/MenuItem";
+// import Menu from "@mui/material/Menu";
+// import MenuItem from "@mui/material/MenuItem";
 // import "./FirstPage.css";
 
 // const Menus = ({ anchorEl, handleClose, DbStatus }) => {
@@ -44,7 +44,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import { Menu, MenuItem, CircularProgress } from "@material-ui/core";
+import { Menu, MenuItem, CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
 const StyledMenu = styled(Menu)`

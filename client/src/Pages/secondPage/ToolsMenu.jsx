@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../routes";
 import WebContext from "./context";
-import { withRouter } from "react-router-dom";
+// import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 
 const ToolList = [
@@ -60,7 +60,8 @@ class ToolsMenu extends Component {
   }
 }
 // onClick={this.props.handleClose}
-export default withRouter(ToolsMenu);
+// export default withRouter(ToolsMenu);
+export default ToolsMenu;
 
 const Modli = styled.li`
   text-align: center;

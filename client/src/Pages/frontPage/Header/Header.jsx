@@ -1,7 +1,6 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Form from "./Form";
 import "./Header.css";
-import { withRouter } from "react-router-dom";
 
 import React, { Component } from "react";
 
@@ -76,10 +75,10 @@ class Header extends Component {
   }
 }
 
-export default withRouter(Header);
+export default Header;
 
 // export default function Header() {
-//   const history = useHistory();
+//   const history = useNavigate();
 //   // states-------------------------------
 
 //   // handlerfunctions----------------------
